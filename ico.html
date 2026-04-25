@@ -157,7 +157,7 @@
   }
 
   header h1 {
-    font-size: 38px;
+    font-size: clamp(22px, 7vw, 38px);
     font-weight: 800;
     line-height: 1.1;
     color: #fff;
@@ -283,8 +283,8 @@
     border: 1px solid var(--green);
     color: var(--green);
     font-family: 'Space Mono', monospace;
-    font-size: 13px;
-    padding: 14px;
+    font-size: clamp(11px, 3vw, 13px);
+    padding: 13px;
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.2s;
@@ -357,8 +357,8 @@
     border: 1px solid var(--border);
     color: #fff;
     font-family: 'Space Mono', monospace;
-    font-size: 20px;
-    padding: 16px 80px 16px 16px;
+    font-size: clamp(15px, 4vw, 20px);
+    padding: 14px 80px 14px 14px;
     border-radius: 12px;
     outline: none;
     transition: border-color 0.2s;
@@ -405,7 +405,7 @@
 
   .receive-box .amount {
     font-family: 'Space Mono', monospace;
-    font-size: 18px;
+    font-size: clamp(14px, 4vw, 18px);
     font-weight: 700;
     color: var(--green);
   }
@@ -417,9 +417,9 @@
     color: var(--dark);
     border: none;
     font-family: 'Syne', sans-serif;
-    font-size: 16px;
+    font-size: clamp(13px, 3.5vw, 16px);
     font-weight: 800;
-    padding: 16px;
+    padding: 14px;
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.2s;
@@ -656,7 +656,7 @@
   <div class="buy-card">
     <div class="card-title">Purchase PDuka</div>
 
-    <button id="connectBtn" onclick="connectWallet()">⚡ Connect Wallet</button>
+    <button id="connectBtn" onclick="connectWallet()">⚡ Connect Wallet to Buy</button>
 
     <div class="tab-toggle">
       <button class="tab-btn active" id="tabUSDC" onclick="switchTab('USDC')">Pay with USDC</button>
@@ -799,7 +799,27 @@ async function loadPublicData() {
 // ─── WALLET ───────────────────────────────────────────────
 async function connectWallet() {
   if (!window.ethereum) {
-    showStatus('No wallet found. Install MetaMask or Trust Wallet!', 'error');
+    // Build the deep link URL pointing back to this page
+    const pageUrl = encodeURIComponent(window.location.href);
+
+    document.getElementById('statusBox').className = 'info';
+    document.getElementById('statusBox').innerHTML = `
+      <div style="margin-bottom:10px;font-size:11px;color:var(--muted);">
+        No wallet detected. Open this page inside your wallet's browser:
+      </div>
+      <a href="https://metamask.app.link/dapp/${window.location.host}${window.location.pathname}"
+         style="display:block;background:rgba(245,139,24,0.12);border:1px solid rgba(245,139,24,0.35);
+                color:#f58b18;text-decoration:none;border-radius:10px;padding:12px 14px;
+                margin-bottom:8px;font-size:12px;font-weight:700;letter-spacing:1px;text-align:center;">
+        🦊 Open in MetaMask
+      </a>
+      <a href="https://link.trustwallet.com/open_url?coin_id=966&url=${pageUrl}"
+         style="display:block;background:rgba(51,117,255,0.1);border:1px solid rgba(51,117,255,0.3);
+                color:#3375ff;text-decoration:none;border-radius:10px;padding:12px 14px;
+                font-size:12px;font-weight:700;letter-spacing:1px;text-align:center;">
+        🔵 Open in Trust Wallet
+      </a>
+    `;
     return;
   }
 
