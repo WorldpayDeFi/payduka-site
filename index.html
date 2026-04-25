@@ -182,6 +182,18 @@
     }
     .btn-primary:hover { background: var(--teal2); transform: translateY(-2px); box-shadow: 0 6px 28px rgba(0,194,168,0.4); }
 
+    .btn-buy-hero {
+      background: linear-gradient(135deg, var(--teal), var(--gold));
+      color: var(--navy);
+      font-weight: 800; font-size: 1rem;
+      padding: 0.9rem 2.25rem; border-radius: 10px;
+      text-decoration: none; border: none; cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.2s, opacity 0.2s;
+      box-shadow: 0 4px 24px rgba(0,194,168,0.4);
+      display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .btn-buy-hero:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,194,168,0.5); opacity: 0.92; }
+
     .btn-secondary {
       background: transparent; color: var(--white);
       font-weight: 600; font-size: 0.95rem;
@@ -210,31 +222,6 @@
     .hero-stat { text-align: center; }
     .hero-stat .val { font-family: var(--font-head); font-size: 1.6rem; font-weight: 800; color: var(--teal); }
     .hero-stat .lbl { font-size: 0.75rem; color: var(--muted); }
-
-    /* ICO Banner in hero */
-    .ico-banner {
-      background: linear-gradient(135deg, rgba(0,194,168,0.12), rgba(245,200,66,0.08));
-      border: 1px solid rgba(0,194,168,0.2);
-      border-radius: 16px;
-      padding: 1.5rem 2rem;
-      margin-bottom: 2.5rem;
-      max-width: 500px;
-      text-align: center;
-    }
-    .ico-banner .label {
-      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em;
-      color: var(--teal); text-transform: uppercase; margin-bottom: 0.4rem;
-    }
-    .ico-banner .round { font-family: var(--font-head); font-size: 1rem; color: var(--gold); font-weight: 700; margin-bottom: 0.75rem; }
-    .ico-banner .price-big { font-family: var(--font-head); font-size: 2.5rem; font-weight: 800; color: var(--white); }
-    .ico-banner .price-sub { font-size: 0.85rem; color: var(--muted); margin-bottom: 1rem; }
-    .ico-meta { display: flex; gap: 2rem; justify-content: center; margin-bottom: 1rem; font-size: 0.85rem; }
-    .ico-meta div { text-align: center; }
-    .ico-meta .v { font-weight: 700; color: var(--white); }
-    .ico-meta .k { color: var(--muted); font-size: 0.75rem; }
-    .progress-bar { background: rgba(255,255,255,0.08); border-radius: 100px; height: 8px; overflow: hidden; margin-bottom: 0.5rem; }
-    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--teal), var(--gold)); border-radius: 100px; width: 0%; }
-    .progress-label { font-size: 0.75rem; color: var(--muted); }
 
     /* ===== SECTION BASE ===== */
     section { padding: 5rem 1.5rem; }
@@ -347,84 +334,111 @@
     .alloc-fill.orange { background: #ff8c42; }
     .alloc-sub { font-size: 0.75rem; color: var(--muted); }
 
-    /* ===== ICO ===== */
-    #ico { background: var(--navy); }
-    .ico-card {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 24px; padding: 2.5rem;
-      max-width: 620px; margin: 0 auto;
+    /* ===== ICO TEASER SECTION ===== */
+    #ico-teaser {
+      background: var(--navy);
+      padding: 5rem 1.5rem;
     }
-    .ico-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; }
-    .ico-header h3 { font-family: var(--font-head); font-size: 1.4rem; font-weight: 800; }
-    .live-badge {
-      background: rgba(0,194,168,0.12); color: var(--teal);
-      border: 1px solid rgba(0,194,168,0.25); border-radius: 100px;
-      font-size: 0.75rem; font-weight: 700; padding: 0.25rem 0.75rem;
-      display: flex; align-items: center; gap: 0.4rem;
-    }
-    .live-dot { width: 6px; height: 6px; background: var(--teal); border-radius: 50%; animation: pulse 2s infinite; }
-    .ico-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; margin-bottom: 1.5rem; }
-    .ico-stat-card { background: rgba(255,255,255,0.04); border-radius: 12px; padding: 1rem; text-align: center; }
-    .ico-stat-card .v { font-family: var(--font-head); font-size: 1.4rem; font-weight: 800; color: var(--teal); }
-    .ico-stat-card .k { font-size: 0.72rem; color: var(--muted); margin-top: 0.2rem; }
-    .ico-progress { margin-bottom: 1.5rem; }
-    .ico-progress .bar { background: rgba(255,255,255,0.07); border-radius: 100px; height: 14px; overflow: hidden; margin: 0.5rem 0; }
-    .ico-progress .fill { height: 100%; background: linear-gradient(90deg, var(--teal), var(--gold)); border-radius: 100px; width: 0%; }
-    .ico-progress .meta { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--muted); }
 
-    .wallet-btn {
-      width: 100%; padding: 1rem; border-radius: 12px;
-      background: var(--teal); color: var(--navy);
-      font-weight: 800; font-size: 1rem; border: none; cursor: pointer;
-      transition: background 0.2s, transform 0.15s;
+    .ico-teaser-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      background: linear-gradient(135deg, rgba(0,194,168,0.07), rgba(245,200,66,0.04));
+      border: 1px solid rgba(0,194,168,0.2);
+      border-radius: 28px;
+      padding: 3.5rem 2.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ico-teaser-inner::before {
+      content: '';
+      position: absolute;
+      top: -40%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 500px;
+      height: 300px;
+      background: radial-gradient(ellipse, rgba(0,194,168,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .ico-live-pill {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(0,194,168,0.1); border: 1px solid rgba(0,194,168,0.25);
+      color: var(--teal); border-radius: 100px;
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em;
+      padding: 0.35rem 1rem; margin-bottom: 1.75rem;
+      text-transform: uppercase;
+    }
+    .ico-live-pill .dot { width: 6px; height: 6px; background: var(--teal); border-radius: 50%; animation: pulse 2s infinite; }
+
+    .ico-teaser-inner h2 {
+      font-family: var(--font-head);
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 800; line-height: 1.1;
       margin-bottom: 1rem;
     }
-    .wallet-btn:hover { background: var(--teal2); transform: translateY(-1px); }
+    .ico-teaser-inner h2 .teal { color: var(--teal); }
+    .ico-teaser-inner h2 .gold { color: var(--gold); }
 
-    .currency-selector { display: flex; gap: 0.75rem; margin-bottom: 1.25rem; }
-    .cur-btn {
-      flex: 1; padding: 0.65rem; border-radius: 10px;
-      border: 1px solid var(--border); background: transparent;
-      color: var(--muted); font-weight: 600; font-size: 0.9rem;
-      cursor: pointer; transition: 0.2s;
+    .ico-teaser-inner p {
+      color: var(--muted); font-size: 1.05rem;
+      max-width: 520px; margin: 0 auto 2rem;
     }
-    .cur-btn.active, .cur-btn:hover { border-color: var(--teal); color: var(--teal); background: rgba(0,194,168,0.07); }
 
-    .input-group { margin-bottom: 1rem; }
-    .input-group label { display: block; font-size: 0.8rem; color: var(--muted); margin-bottom: 0.4rem; font-weight: 600; }
-    .input-group input {
-      width: 100%; padding: 0.85rem 1rem; border-radius: 10px;
-      background: rgba(255,255,255,0.06); border: 1px solid var(--border);
-      color: var(--white); font-size: 1rem; font-family: var(--font-body);
-      transition: border-color 0.2s; outline: none;
+    .ico-tier-row {
+      display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;
+      margin-bottom: 2.5rem;
     }
-    .input-group input:focus { border-color: var(--teal); }
 
-    .receive-box {
-      background: rgba(0,194,168,0.05); border: 1px solid rgba(0,194,168,0.15);
-      border-radius: 10px; padding: 0.85rem 1rem; margin-bottom: 1.25rem;
-      display: flex; justify-content: space-between; align-items: center;
+    .ico-tier-pill {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 0.85rem 1.5rem;
+      text-align: center; min-width: 120px;
+      transition: border-color 0.2s;
     }
-    .receive-box .label { font-size: 0.8rem; color: var(--muted); }
-    .receive-box .amount { font-family: var(--font-head); font-weight: 800; font-size: 1.2rem; color: var(--teal); }
-    .receive-box .usd { font-size: 0.8rem; color: var(--muted); }
-
-    .ico-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 1.25rem; }
-    .ico-meta-item { font-size: 0.8rem; display: flex; justify-content: space-between; }
-    .ico-meta-item .k { color: var(--muted); }
-    .ico-meta-item .v { font-weight: 600; }
-
-    .contract-links { margin-top: 1.25rem; }
-    .contract-link {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 0.6rem 0; border-bottom: 1px solid var(--border);
-      font-size: 0.82rem;
+    .ico-tier-pill.active { border-color: var(--teal); background: rgba(0,194,168,0.06); }
+    .ico-tier-pill .tier-name { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.35rem; }
+    .ico-tier-pill .tier-price { font-family: var(--font-head); font-size: 1.1rem; font-weight: 800; color: var(--white); }
+    .ico-tier-pill.active .tier-price { color: var(--teal); }
+    .ico-tier-pill .tier-badge {
+      font-size: 0.65rem; font-weight: 700; color: var(--teal);
+      background: rgba(0,194,168,0.12); padding: 0.15rem 0.5rem;
+      border-radius: 100px; margin-top: 0.35rem; display: inline-block;
     }
-    .contract-link:last-child { border-bottom: none; }
-    .contract-link .k { color: var(--muted); }
-    .contract-link .v { color: var(--teal); font-family: monospace; font-size: 0.8rem; cursor: pointer; }
 
-    .disclaimer { text-align: center; font-size: 0.75rem; color: var(--muted); margin-top: 1rem; line-height: 1.5; }
+    .ico-stats-row {
+      display: flex; justify-content: center; gap: 2.5rem; flex-wrap: wrap;
+      margin-bottom: 2.5rem;
+    }
+    .ico-stat-item { text-align: center; }
+    .ico-stat-item .val { font-family: var(--font-head); font-size: 1.5rem; font-weight: 800; color: var(--white); }
+    .ico-stat-item .val.teal { color: var(--teal); }
+    .ico-stat-item .val.gold { color: var(--gold); }
+    .ico-stat-item .lbl { font-size: 0.75rem; color: var(--muted); margin-top: 0.2rem; }
+
+    .ico-cta-group {
+      display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;
+    }
+
+    .btn-buy-big {
+      background: linear-gradient(135deg, var(--teal), var(--gold));
+      color: var(--navy);
+      font-weight: 800; font-size: 1.1rem;
+      padding: 1rem 2.75rem; border-radius: 12px;
+      text-decoration: none;
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      transition: transform 0.15s, box-shadow 0.2s, opacity 0.2s;
+      box-shadow: 0 6px 28px rgba(0,194,168,0.35);
+    }
+    .btn-buy-big:hover { transform: translateY(-3px); box-shadow: 0 10px 40px rgba(0,194,168,0.5); opacity: 0.9; }
+
+    .disclaimer-text {
+      font-size: 0.73rem; color: var(--muted);
+      margin-top: 1.5rem; opacity: 0.7;
+    }
 
     /* ===== ROADMAP ===== */
     #roadmap { background: var(--navy2); }
@@ -567,14 +581,15 @@
       .nav-links { display: none; }
       .nav-toggle { display: flex; }
       nav { padding: 0 1.25rem; }
-      .ico-stats { grid-template-columns: 1fr 1fr; }
       .wp-card { flex-direction: column; gap: 2rem; }
-      .ico-card { padding: 1.75rem; }
       .token-grid { grid-template-columns: 1fr; }
+      .ico-teaser-inner { padding: 2.5rem 1.5rem; }
+      .ico-stats-row { gap: 1.5rem; }
     }
     @media (max-width: 480px) {
       .hero-stats { gap: 0.5rem 1.5rem; }
-      .ico-stats { grid-template-columns: 1fr; }
+      .ico-tier-row { gap: 0.6rem; }
+      .ico-tier-pill { min-width: 90px; padding: 0.65rem 1rem; }
     }
 
     /* ===== FADE-IN ANIMATION ===== */
@@ -605,8 +620,8 @@
     <li><a href="#team">Team</a></li>
     <li><a href="#whitepaper">Whitepaper</a></li>
     <li><a href="monetary-policy.html">Monetary Policy</a></li>
-    <li><a href="#ico" class="btn-nav">Buy PDuka</a></li>
     <li><a href="#collaborate">Collaborate</a></li>
+    <li><a href="ico.html" class="btn-nav">🚀 Buy PDuka</a></li>
   </ul>
 
   <button class="nav-toggle" onclick="toggleMenu()" aria-label="Toggle menu">
@@ -623,8 +638,8 @@
   <a href="#team" onclick="closeMenu()">Team</a>
   <a href="#whitepaper" onclick="closeMenu()">Whitepaper</a>
   <a href="monetary-policy.html" onclick="closeMenu()">Monetary Policy</a>
-  <a href="#ico" onclick="closeMenu()">Buy PDuka Tokens</a>
   <a href="#collaborate" onclick="closeMenu()">Collaborate</a>
+  <a href="ico.html" onclick="closeMenu()">🚀 Buy PDuka Tokens</a>
 </div>
 
 <!-- HERO -->
@@ -635,23 +650,8 @@
     <h1>Retail Payments <span class="accent">Reimagined</span><br/>on <span class="gold">Blockchain</span></h1>
     <p>PayDuka empowers merchants with instant, ultra-low-cost crypto payments — while enabling the unbanked, rewarding communities, and building Africa's first Play-to-Earn retail ecosystem.</p>
 
-    <!-- ICO Banner -->
-    <div class="ico-banner">
-      <div class="label">⚡ Initial Coin Offering</div>
-      <div class="round">SEED ROUND — LIVE NOW</div>
-      <div style="font-size:0.85rem;color:var(--muted);margin-bottom:0.5rem;">PDuka Token Seed ICO · $0.005 per PDUKA</div>
-      <div class="price-big">$0.005</div>
-      <div class="price-sub">Token Price</div>
-      <div class="ico-meta">
-        <div><div class="v">1B</div><div class="k">Available</div></div>
-        <div><div class="v">0</div><div class="k">Sold</div></div>
-      </div>
-      <div class="progress-bar"><div class="progress-fill"></div></div>
-      <div class="progress-label"><strong>0%</strong> of 1B sold</div>
-    </div>
-
     <div class="hero-ctas">
-      <a href="#ico" class="btn-primary">🚀 Buy PDuka Tokens</a>
+      <a href="ico.html" class="btn-buy-hero">🚀 Buy PDuka — $0.005</a>
       <a href="#whitepaper" class="btn-secondary">📄 Read Whitepaper</a>
       <a href="#collaborate" class="btn-outline">🤝 Collaborate With Us</a>
     </div>
@@ -827,7 +827,7 @@
         <div class="alloc-item">
           <div class="alloc-header"><span class="name">Liquidity Provision</span><span class="pct">15%</span></div>
           <div class="alloc-bar"><div class="alloc-fill blue" style="width:15%"></div></div>
-          <div class="alloc-sub">3.15B tokens — CEX/DEX market making (OKX, KuCoin)</div>
+          <div class="alloc-sub">3.15B tokens — CEX/DEX market making</div>
         </div>
         <div class="alloc-item">
           <div class="alloc-header"><span class="name">Team &amp; Advisors</span><span class="pct">10%</span></div>
@@ -839,95 +839,48 @@
   </div>
 </section>
 
-<!-- BUY / ICO - IMPROVED WIDGET -->
-<section id="ico">
+<!-- ICO TEASER -->
+<section id="ico-teaser">
   <div class="container fade-in">
-    <div class="section-label">// PDuka Token ICO</div>
-    <h2>Buy PDuka Tokens — Seed Round LIVE</h2>
-    <p class="section-sub">Price: $0.005 per PDUKA • Polygon Mainnet • Pay with USDC or POL</p>
+    <div class="ico-teaser-inner">
+      <div class="ico-live-pill"><span class="dot"></span>ICO — SEED ROUND LIVE NOW</div>
 
-    <div class="ico-card">
-      <div class="ico-header">
-        <h3>Seed Round — 1,000,000,000 PDuka Available</h3>
-        <div class="live-badge"><span class="live-dot"></span> LIVE NOW</div>
-      </div>
+      <h2>Get <span class="teal">PDuka</span> at<br/><span class="gold">Seed Price</span></h2>
+      <p>Buy before DEX listing. Seed round tokens available at $0.005 — 2× cheaper than Round 2. Polygon Mainnet. Pay with USDC or POL.</p>
 
-      <div class="ico-stats">
-        <div class="ico-stat-card">
-          <div class="v">$0.005</div>
-          <div class="k">Current Price</div>
+      <div class="ico-tier-row">
+        <div class="ico-tier-pill active">
+          <div class="tier-name">Seed Round</div>
+          <div class="tier-price">$0.005</div>
+          <div class="tier-badge">LIVE NOW</div>
         </div>
-        <div class="ico-stat-card">
-          <div class="v" id="soldTokens">245,000,000</div>
-          <div class="k">Tokens Sold</div>
+        <div class="ico-tier-pill">
+          <div class="tier-name">Round 1</div>
+          <div class="tier-price">$0.008</div>
         </div>
-        <div class="ico-stat-card">
-          <div class="v">1B</div>
-          <div class="k">Available</div>
+        <div class="ico-tier-pill">
+          <div class="tier-name">Round 2</div>
+          <div class="tier-price">$0.010</div>
         </div>
-      </div>
-
-      <!-- Progress Bar -->
-      <div class="ico-progress">
-        <div style="display:flex;justify-content:space-between;font-size:0.85rem;color:var(--muted);margin-bottom:0.5rem;">
-          <span>Seed Round Progress</span>
-          <span id="progressText"><strong>24.5%</strong> of 1B sold</span>
-        </div>
-        <div class="bar" style="height:14px;">
-          <div class="fill" id="progressFill" style="width: 24.5%;"></div>
+        <div class="ico-tier-pill">
+          <div class="tier-name">DEX Listing</div>
+          <div class="tier-price">$0.010+</div>
         </div>
       </div>
 
-      <!-- Wallet Connect -->
-      <button class="wallet-btn" id="connectBtn" onclick="handleConnectWallet()">
-        <span id="connectText">🔗 Connect Wallet</span>
-      </button>
-      <div id="walletStatus" style="text-align:center; font-size:0.8rem; color:var(--muted); margin:8px 0 12px;"></div>
-
-      <div class="currency-selector">
-        <button class="cur-btn active" onclick="setCurrency('USDC', this)">USDC</button>
-        <button class="cur-btn" onclick="setCurrency('POL', this)">POL</button>
+      <div class="ico-stats-row">
+        <div class="ico-stat-item"><div class="val teal">1B</div><div class="lbl">Seed Tokens Available</div></div>
+        <div class="ico-stat-item"><div class="val gold">$0.005</div><div class="lbl">Current Price</div></div>
+        <div class="ico-stat-item"><div class="val">$5M</div><div class="lbl">Target Raise</div></div>
+        <div class="ico-stat-item"><div class="val">Polygon</div><div class="lbl">Network</div></div>
       </div>
 
-      <div class="input-group">
-        <label>You Pay (<span id="curLabel">USDC</span>)</label>
-        <input type="number" id="payAmount" placeholder="0.00" min="10" step="0.01" oninput="calcReceive()" />
+      <div class="ico-cta-group">
+        <a href="ico.html" class="btn-buy-big">🚀 Buy PDuka Now</a>
+        <a href="#whitepaper" class="btn-secondary" style="display:inline-flex;align-items:center;gap:0.5rem;">📄 Read Whitepaper</a>
       </div>
 
-      <div class="receive-box">
-        <div>
-          <div class="label">You Receive</div>
-          <div class="amount" id="receiveAmount">0 PDUKA</div>
-          <div class="usd" id="receiveUsd">≈ $0.00</div>
-        </div>
-      </div>
-
-      <button class="wallet-btn" onclick="handleBuy()" style="background: linear-gradient(90deg, var(--teal), var(--gold)); color: var(--navy); margin-top: 0.5rem;">
-        🚀 Buy PDuka Tokens Now
-      </button>
-
-      <div class="ico-meta-grid">
-        <div class="ico-meta-item"><span class="k">Network</span><span class="v">Polygon Mainnet</span></div>
-        <div class="ico-meta-item"><span class="k">Min Purchase</span><span class="v">$10</span></div>
-        <div class="ico-meta-item"><span class="k">Accepted</span><span class="v">USDC • POL</span></div>
-        <div class="ico-meta-item"><span class="k">Gas Fee</span><span class="v">&lt; $0.01</span></div>
-      </div>
-
-      <div class="contract-links">
-        <div style="font-size:0.8rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin:1rem 0 0.5rem;">Smart Contracts</div>
-        <div class="contract-link">
-          <span class="k">ICO Contract</span>
-          <span class="v" onclick="copyText('0xD8358ba36723b860FFC8E9830060a8Cf348B84d3')">0xD8358b...84d3 📋</span>
-        </div>
-        <div class="contract-link">
-          <span class="k">PDuka Token</span>
-          <span class="v" onclick="copyText('0x5025011B57b6f97C28fB25e3Ab6DE8bDB5c90E54')">0x50250...E54 📋</span>
-        </div>
-      </div>
-
-      <div class="disclaimer">
-        Not financial advice. Cryptocurrency investments carry risk. Participate at your own risk.
-      </div>
+      <p class="disclaimer-text">Not financial advice. Cryptocurrency investments carry risk. Participate responsibly.</p>
     </div>
   </div>
 </section>
@@ -981,7 +934,7 @@
         <div class="period">Q4 2026</div>
         <div class="title">Token Listing &amp; Expansion</div>
         <ul>
-          <li>PDuka listed on OKX, KuCoin &amp; Uniswap/QuickSwap</li>
+          <li>PDuka listed on OKX, KuCoin &amp; QuickSwap</li>
           <li>Hardware PoS terminal with solar charging</li>
           <li>Cross-border payments: East Africa corridor</li>
           <li>2,000+ active merchants by year end</li>
@@ -1142,7 +1095,7 @@
   <div class="footer-inner">
     <div class="footer-brand">
       <a class="logo" href="#hero">
-        <div class="hex" style="width:32px;height:32px;font-size:0.65rem;">PD</div>
+        <div class="hex" style="width:32px;height:32px;font-size:0.65rem;background:linear-gradient(135deg,var(--teal),var(--gold));clip-path:polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--navy);">PD</div>
         PayDuka
       </a>
       <p>Africa's Retail Blockchain Ecosystem. Powered by Polygon. Built for the future of African commerce.</p>
@@ -1155,7 +1108,7 @@
       <a href="#team">Team</a>
       <a href="#whitepaper">Whitepaper</a>
       <a href="monetary-policy.html">Monetary Policy</a>
-      <a href="#ico">Buy PDuka</a>
+      <a href="ico.html">🚀 Buy PDuka</a>
       <a href="#collaborate">Collaborate</a>
     </div>
   </div>
@@ -1176,79 +1129,6 @@
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.1 });
   document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-
-  // ===== IMPROVED WALLET CONNECT =====
-  let isWalletConnected = false;
-  let userAddress = null;
-
-  async function handleConnectWallet() {
-    const btn = document.getElementById('connectBtn');
-    const status = document.getElementById('walletStatus');
-    const text = document.getElementById('connectText');
-
-    if (typeof window.ethereum !== 'undefined') {
-      try {
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        userAddress = accounts[0];
-        isWalletConnected = true;
-        
-        text.textContent = '✅ Connected';
-        btn.style.background = '#00C2A8';
-        btn.style.color = '#0B1629';
-        status.innerHTML = `Connected: ${userAddress.substring(0,6)}...${userAddress.substring(38)}`;
-        status.style.color = 'var(--teal)';
-      } catch (error) {
-        status.textContent = 'User rejected the request';
-        status.style.color = '#ff8c42';
-      }
-    } else {
-      status.innerHTML = 'No wallet detected.<br>Please install MetaMask or Trust Wallet';
-      status.style.color = '#ff8c42';
-    }
-  }
-
-  // ===== CURRENCY TOGGLE & CALCULATOR =====
-  let activeCurrency = 'USDC';
-  function setCurrency(cur, btn) {
-    activeCurrency = cur;
-    document.querySelectorAll('.cur-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('curLabel').textContent = cur;
-    calcReceive();
-  }
-
-  function calcReceive() {
-    const pay = parseFloat(document.getElementById('payAmount').value) || 0;
-    let usdValue = (activeCurrency === 'POL') ? pay * 0.40 : pay;
-    const tokens = usdValue / 0.005;
-    
-    document.getElementById('receiveAmount').textContent = 
-      tokens > 0 ? tokens.toLocaleString() + ' PDUKA' : '0 PDUKA';
-    document.getElementById('receiveUsd').textContent = '≈ $' + usdValue.toFixed(2);
-  }
-
-  function handleBuy() {
-    if (!isWalletConnected) {
-      alert("Please connect your wallet first!");
-      document.getElementById('connectBtn').scrollIntoView({ behavior: "smooth" });
-      return;
-    }
-    const pay = parseFloat(document.getElementById('payAmount').value) || 0;
-    if (pay < 10) {
-      alert("Minimum purchase is $10");
-      return;
-    }
-    alert(`Purchase initiated!\nYou are buying ~${(pay / 0.005).toLocaleString()} PDuka\nWallet: ${userAddress ? userAddress.substring(0,10)+'...' : ''}\n\n(This is demo mode — real purchase coming soon)`);
-  }
-
-  // ===== COPY CONTRACT =====
-  function copyText(text) {
-    navigator.clipboard.writeText(text).then(() => {
-      alert('Address copied to clipboard!');
-    }).catch(() => {
-      prompt('Copy this address:', text);
-    });
-  }
 
   // ===== CONTACT FORM =====
   function submitForm() {
@@ -1281,4 +1161,4 @@
   });
 </script>
 </body>
-  </html>
+</html>
