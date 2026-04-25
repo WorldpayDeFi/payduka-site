@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Buy PDuka — PayDuka ICO Presale</title>
+<meta name="description" content="Buy PDuka tokens at seed price $0.005. Africa's blockchain retail payment ecosystem on Polygon. Pay with USDC or POL." />
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --green: #00ff88;
+    --green-dim: #00cc6a;
+    --dark: #060d0a;
+    --card: #0c1a13;
+    --border: #1a3326;
+    --text: #c8f0dc;
+    --muted: #5a8a72;
+    --red: #ff4d6d;
+    --gold: #f5c518;
+    --navy: #0B1629;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,255,136,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,136,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Glow blob */
+  body::after {
+    content: '';
+    position: fixed;
+    top: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 400px;
+    background: radial-gradient(ellipse, rgba(0,255,136,0.08) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ===== TOP NAV ===== */
+  .top-nav {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(6,13,10,0.9);
+    backdrop-filter: blur(12px);
+  }
+
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #fff;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+  }
+
+  .nav-hex {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, #00C2A8, #F5C842);
+    clip-path: polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.65rem; font-weight: 800; color: #0B1629;
+    flex-shrink: 0;
+  }
+
+  .nav-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--muted);
+    text-decoration: none;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+  }
+  .nav-back:hover {
+    color: var(--green);
+    border-color: var(--green);
+    background: rgba(0,255,136,0.04);
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 24px 16px 60px;
+  }
+
+  /* Header */
+  header {
+    text-align: center;
+    padding: 28px 0 24px;
+  }
+
+  .logo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0,255,136,0.06);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 8px 18px;
+    margin-bottom: 24px;
+  }
+
+  .logo-dot {
+    width: 8px; height: 8px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  .logo-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--green);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  header h1 {
+    font-size: 38px;
+    font-weight: 800;
+    line-height: 1.1;
+    color: #fff;
+    margin-bottom: 10px;
+  }
+
+  header h1 span {
+    color: var(--green);
+  }
+
+  header p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* Stats row */
+  .stats-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin: 20px 0;
+  }
+
+  .stat-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 10px;
+    text-align: center;
+  }
+
+  .stat-box .val {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--green);
+    display: block;
+  }
+
+  .stat-box .lbl {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 4px;
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Progress */
+  .progress-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .progress-header span {
+    font-size: 12px;
+    font-family: 'Space Mono', monospace;
+    color: var(--muted);
+  }
+
+  .progress-header strong {
+    color: var(--green);
+  }
+
+  .progress-bar {
+    background: rgba(255,255,255,0.05);
+    border-radius: 100px;
+    height: 8px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green-dim), var(--green));
+    border-radius: 100px;
+    width: 0%;
+    transition: width 1s ease;
+    box-shadow: 0 0 12px var(--green);
+  }
+
+  .progress-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* Main card */
+  .buy-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 24px 20px;
+    margin-bottom: 16px;
+  }
+
+  .card-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  /* Wallet button */
+  #connectBtn {
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--green);
+    color: var(--green);
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    padding: 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+  }
+
+  #connectBtn:hover {
+    background: rgba(0,255,136,0.08);
+  }
+
+  #connectBtn.connected {
+    border-color: var(--border);
+    color: var(--muted);
+    font-size: 11px;
+  }
+
+  /* Tab toggle */
+  .tab-toggle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 20px;
+    gap: 4px;
+  }
+
+  .tab-btn {
+    padding: 10px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .tab-btn.active {
+    background: var(--green);
+    color: var(--dark);
+  }
+
+  /* Input */
+  .input-group {
+    margin-bottom: 16px;
+  }
+
+  .input-label {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .input-wrap {
+    position: relative;
+  }
+
+  .input-wrap input {
+    width: 100%;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    color: #fff;
+    font-family: 'Space Mono', monospace;
+    font-size: 20px;
+    padding: 16px 80px 16px 16px;
+    border-radius: 12px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .input-wrap input:focus {
+    border-color: var(--green);
+  }
+
+  .input-wrap input::placeholder { color: var(--muted); }
+
+  .input-token {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--green);
+    font-weight: 700;
+    background: rgba(0,255,136,0.1);
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+
+  /* You receive */
+  .receive-box {
+    background: rgba(0,255,136,0.04);
+    border: 1px solid rgba(0,255,136,0.15);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .receive-box .label {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    text-transform: uppercase;
+  }
+
+  .receive-box .amount {
+    font-family: 'Space Mono', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--green);
+  }
+
+  /* Buy button */
+  #buyBtn {
+    width: 100%;
+    background: var(--green);
+    color: var(--dark);
+    border: none;
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    padding: 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  #buyBtn:hover:not(:disabled) {
+    background: #00ffaa;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(0,255,136,0.3);
+  }
+
+  #buyBtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  /* Status */
+  #statusBox {
+    margin-top: 14px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    display: none;
+    word-break: break-all;
+    line-height: 1.5;
+  }
+
+  #statusBox.info {
+    background: rgba(0,255,136,0.06);
+    border: 1px solid rgba(0,255,136,0.2);
+    color: var(--green);
+    display: block;
+  }
+
+  #statusBox.error {
+    background: rgba(255,77,109,0.08);
+    border: 1px solid rgba(255,77,109,0.3);
+    color: var(--red);
+    display: block;
+  }
+
+  #statusBox.success {
+    background: rgba(0,255,136,0.1);
+    border: 1px solid var(--green);
+    color: #fff;
+    display: block;
+  }
+
+  /* Info box */
+  .info-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 13px;
+  }
+
+  .info-row:last-child { border-bottom: none; }
+
+  .info-row .key { color: var(--muted); }
+
+  .info-row .value {
+    font-family: 'Space Mono', monospace;
+    color: #fff;
+    font-size: 12px;
+  }
+
+  .info-row .value.green { color: var(--green); }
+  .info-row .value.gold { color: var(--gold); }
+
+  /* Tiers */
+  .tiers {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .tier {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 10px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tier.active-tier {
+    border-color: var(--green);
+  }
+
+  .tier.active-tier::before {
+    content: 'LIVE';
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    font-size: 8px;
+    background: var(--green);
+    color: var(--dark);
+    padding: 2px 5px;
+    border-radius: 4px;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+  }
+
+  .tier-name {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+
+  .tier-price {
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .tier-price.green { color: var(--green); }
+
+  /* footer */
+  .page-footer {
+    text-align: center;
+    padding: 20px 0;
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+  }
+
+  .page-footer a {
+    color: var(--green);
+    text-decoration: none;
+  }
+
+  .spinner {
+    display: inline-block;
+    width: 14px; height: 14px;
+    border: 2px solid rgba(0,0,0,0.2);
+    border-top-color: var(--dark);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="top-nav">
+  <a href="index.html" class="nav-brand">
+    <div class="nav-hex">PD</div>
+    PayDuka
+  </a>
+  <a href="index.html" class="nav-back">← Back to Site</a>
+</nav>
+
+<div class="container">
+
+  <!-- Header -->
+  <header>
+    <div class="logo-badge">
+      <div class="logo-dot"></div>
+      <span class="logo-text">PayDuka ICO — Live</span>
+    </div>
+    <h1>Buy <span>PDuka</span><br/>Early Access</h1>
+    <p>Africa's blockchain payment revolution.<br/>Get PDuka at seed price before DEX listing.</p>
+  </header>
+
+  <!-- Tiers -->
+  <div class="tiers">
+    <div class="tier active-tier">
+      <div class="tier-name">Seed</div>
+      <div class="tier-price green">$0.005</div>
+    </div>
+    <div class="tier">
+      <div class="tier-name">Round 1</div>
+      <div class="tier-price">$0.008</div>
+    </div>
+    <div class="tier">
+      <div class="tier-name">Round 2</div>
+      <div class="tier-price">$0.010</div>
+    </div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-card">
+    <div class="progress-header">
+      <span>ICO Progress</span>
+      <span><strong id="pctSold">0%</strong> sold</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div class="progress-labels">
+      <span id="soldLabel">0 PDuka sold</span>
+      <span>1,000,000,000 total</span>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-box">
+      <span class="val">$0.005</span>
+      <span class="lbl">Price</span>
+    </div>
+    <div class="stat-box">
+      <span class="val" id="polPriceDisplay">—</span>
+      <span class="lbl">POL/USD</span>
+    </div>
+    <div class="stat-box">
+      <span class="val">21B</span>
+      <span class="lbl">Supply</span>
+    </div>
+  </div>
+
+  <!-- Buy Card -->
+  <div class="buy-card">
+    <div class="card-title">Purchase PDuka</div>
+
+    <button id="connectBtn" onclick="connectWallet()">⚡ Connect Wallet</button>
+
+    <div class="tab-toggle">
+      <button class="tab-btn active" id="tabUSDC" onclick="switchTab('USDC')">Pay with USDC</button>
+      <button class="tab-btn" id="tabPOL" onclick="switchTab('POL')">Pay with POL</button>
+    </div>
+
+    <div class="input-group">
+      <label class="input-label">You Pay</label>
+      <div class="input-wrap">
+        <input type="number" id="amountInput" placeholder="0.00" min="0" step="any" oninput="updatePreview()"/>
+        <span class="input-token" id="tokenLabel">USDC</span>
+      </div>
+    </div>
+
+    <div class="receive-box">
+      <span class="label">You Receive</span>
+      <span class="amount" id="previewAmount">0 PDuka</span>
+    </div>
+
+    <button id="buyBtn" onclick="handleBuy()" disabled>Connect Wallet to Buy</button>
+    <div id="statusBox"></div>
+  </div>
+
+  <!-- Contract Info -->
+  <div class="info-card">
+    <div class="info-row">
+      <span class="key">ICO Contract</span>
+      <span class="value" id="icoAddrDisplay">Not deployed yet</span>
+    </div>
+    <div class="info-row">
+      <span class="key">PDuka Token</span>
+      <span class="value">0x5025...E54</span>
+    </div>
+    <div class="info-row">
+      <span class="key">Network</span>
+      <span class="value green">Polygon Mainnet</span>
+    </div>
+    <div class="info-row">
+      <span class="key">ICO Status</span>
+      <span class="value gold" id="icoStatusDisplay">Loading...</span>
+    </div>
+    <div class="info-row">
+      <span class="key">Remaining</span>
+      <span class="value" id="remainingDisplay">—</span>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    Powered by Polygon · Chainlink · QuickSwap<br/><br/>
+    <small style="opacity:0.6;">Not financial advice. Crypto investments carry risk. Participate responsibly.</small>
+  </div>
+
+</div>
+
+<!-- ethers v6 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+<script>
+// ─── CONFIG ───────────────────────────────────────────────
+const PDUKA_TOKEN = "0x5025053F6Dec8C8Cfa85AE24C0CB9e4935C98E54";
+const USDC_ADDRESS = "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359";
+const POLYGON_CHAIN_ID = 137;
+
+// 🔴 ICO CONTRACT ADDRESS:
+const ICO_ADDRESS = "0xD8358ba36723b860FFC8E9830060a8Cf348B84d3";
+
+// ─── ABI ──────────────────────────────────────────────────
+const ICO_ABI = [
+  "function buyWithUSDC(uint256 usdcAmount) external",
+  "function buyWithPOL() external payable",
+  "function startICO() external",
+  "function endICO() external",
+  "function withdrawUnsoldTokens() external",
+  "function icoActive() external view returns (bool)",
+  "function totalSold() external view returns (uint256)",
+  "function remainingAllocation() external view returns (uint256)",
+  "function icoBalance() external view returns (uint256)",
+  "function getPolPrice() external view returns (uint256)",
+  "function previewPOLPurchase(uint256 polAmount) external view returns (uint256)",
+  "function previewUSDCPurchase(uint256 usdcAmount) external pure returns (uint256)",
+  "function PDUKA_PRICE_USD() external pure returns (uint256)",
+  "function ICO_ALLOCATION() external pure returns (uint256)"
+];
+
+const ERC20_ABI = [
+  "function approve(address spender, uint256 amount) external returns (bool)",
+  "function allowance(address owner, address spender) external view returns (uint256)",
+  "function balanceOf(address account) external view returns (uint256)"
+];
+
+// ─── STATE ────────────────────────────────────────────────
+let provider, signer, icoContract, usdcContract;
+let walletConnected = false;
+let currentTab = 'USDC';
+let polPriceUSD = 0;
+
+// ─── INIT ─────────────────────────────────────────────────
+window.addEventListener('load', async () => {
+  if (ICO_ADDRESS) {
+    document.getElementById('icoAddrDisplay').textContent =
+      ICO_ADDRESS.slice(0,6) + '...' + ICO_ADDRESS.slice(-4);
+    await loadPublicData();
+  } else {
+    document.getElementById('icoAddrDisplay').textContent = 'Deploying soon...';
+    document.getElementById('icoStatusDisplay').textContent = 'Coming Soon';
+  }
+});
+
+async function loadPublicData() {
+  try {
+    const rpc = new ethers.JsonRpcProvider("https://polygon-rpc.com");
+    const ico = new ethers.Contract(ICO_ADDRESS, ICO_ABI, rpc);
+
+    const [active, sold, remaining, polPrice] = await Promise.all([
+      ico.icoActive(),
+      ico.totalSold(),
+      ico.remainingAllocation(),
+      ico.getPolPrice()
+    ]);
+
+    document.getElementById('icoStatusDisplay').textContent = active ? '🟢 ACTIVE' : '🔴 Inactive';
+
+    polPriceUSD = Number(polPrice) / 1e8;
+    document.getElementById('polPriceDisplay').textContent = '$' + polPriceUSD.toFixed(3);
+
+    const soldNum = Number(ethers.formatEther(sold));
+    const pct = (soldNum / 1_000_000_000) * 100;
+
+    document.getElementById('progressFill').style.width = pct.toFixed(2) + '%';
+    document.getElementById('pctSold').textContent = pct.toFixed(2) + '%';
+    document.getElementById('soldLabel').textContent = soldNum.toLocaleString(undefined, {maximumFractionDigits: 0}) + ' PDuka sold';
+    document.getElementById('remainingDisplay').textContent =
+      Number(ethers.formatEther(remaining)).toLocaleString(undefined, {maximumFractionDigits: 0}) + ' PDuka';
+
+    updatePreview();
+  } catch(e) {
+    console.error('Public data error:', e);
+  }
+}
+
+// ─── WALLET ───────────────────────────────────────────────
+async function connectWallet() {
+  if (!window.ethereum) {
+    showStatus('No wallet found. Install MetaMask or Trust Wallet!', 'error');
+    return;
+  }
+
+  try {
+    await window.ethereum.request({ method: 'eth_requestAccounts' });
+    provider = new ethers.BrowserProvider(window.ethereum);
+    signer = await provider.getSigner();
+
+    const network = await provider.getNetwork();
+    if (Number(network.chainId) !== POLYGON_CHAIN_ID) {
+      try {
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: '0x89' }]
+        });
+        provider = new ethers.BrowserProvider(window.ethereum);
+        signer = await provider.getSigner();
+      } catch(e) {
+        showStatus('Please switch to Polygon Mainnet in your wallet.', 'error');
+        return;
+      }
+    }
+
+    const addr = await signer.getAddress();
+    const short = addr.slice(0,6) + '...' + addr.slice(-4);
+
+    if (ICO_ADDRESS) {
+      icoContract = new ethers.Contract(ICO_ADDRESS, ICO_ABI, signer);
+      usdcContract = new ethers.Contract(USDC_ADDRESS, ERC20_ABI, signer);
+    }
+
+    walletConnected = true;
+    document.getElementById('connectBtn').textContent = '✅ ' + short;
+    document.getElementById('connectBtn').classList.add('connected');
+    document.getElementById('buyBtn').disabled = false;
+    document.getElementById('buyBtn').textContent = 'Buy PDuka Now';
+
+    if (ICO_ADDRESS) await loadPublicData();
+  } catch(e) {
+    showStatus('Connection failed: ' + (e.message || e), 'error');
+  }
+}
+
+// ─── TAB ──────────────────────────────────────────────────
+function switchTab(tab) {
+  currentTab = tab;
+  document.getElementById('tabUSDC').classList.toggle('active', tab === 'USDC');
+  document.getElementById('tabPOL').classList.toggle('active', tab === 'POL');
+  document.getElementById('tokenLabel').textContent = tab;
+  document.getElementById('amountInput').value = '';
+  document.getElementById('previewAmount').textContent = '0 PDuka';
+  hideStatus();
+}
+
+// ─── PREVIEW ──────────────────────────────────────────────
+function updatePreview() {
+  const val = parseFloat(document.getElementById('amountInput').value) || 0;
+  let pduka = 0;
+
+  if (currentTab === 'USDC') {
+    pduka = (val * 1e6) / 5000;
+  } else {
+    if (polPriceUSD > 0) {
+      pduka = (val * polPriceUSD) / 0.005;
+    }
+  }
+
+  const fmt = pduka > 0
+    ? pduka.toLocaleString(undefined, { maximumFractionDigits: 2 }) + ' PDuka'
+    : '0 PDuka';
+  document.getElementById('previewAmount').textContent = fmt;
+}
+
+// ─── BUY ──────────────────────────────────────────────────
+async function handleBuy() {
+  if (!walletConnected) { connectWallet(); return; }
+  if (!ICO_ADDRESS) { showStatus('ICO contract not set yet. Check back soon!', 'error'); return; }
+
+  const val = document.getElementById('amountInput').value;
+  if (!val || parseFloat(val) <= 0) {
+    showStatus('Enter an amount to buy.', 'error'); return;
+  }
+
+  if (currentTab === 'USDC') {
+    await buyUSDC(val);
+  } else {
+    await buyPOL(val);
+  }
+}
+
+async function buyUSDC(amount) {
+  try {
+    setBuyLoading(true);
+    const usdcAmount = ethers.parseUnits(amount, 6);
+
+    showStatus('Checking USDC allowance...', 'info');
+    const addr = await signer.getAddress();
+    const allowance = await usdcContract.allowance(addr, ICO_ADDRESS);
+
+    if (allowance < usdcAmount) {
+      showStatus('Approving USDC — confirm in wallet...', 'info');
+      const approveTx = await usdcContract.approve(ICO_ADDRESS, usdcAmount);
+      showStatus('Waiting for approval tx...', 'info');
+      await approveTx.wait();
+    }
+
+    showStatus('Sending buy transaction — confirm in wallet...', 'info');
+    const tx = await icoContract.buyWithUSDC(usdcAmount);
+    showStatus('Transaction submitted! Waiting...', 'info');
+    const receipt = await tx.wait();
+
+    showStatus(
+      `✅ Success! Tx: ${receipt.hash.slice(0,10)}...\nView on PolygonScan: https://polygonscan.com/tx/${receipt.hash}`,
+      'success'
+    );
+    await loadPublicData();
+  } catch(e) {
+    showStatus('Error: ' + (e.reason || e.message || 'Transaction failed'), 'error');
+  } finally {
+    setBuyLoading(false);
+  }
+}
+
+async function buyPOL(amount) {
+  try {
+    setBuyLoading(true);
+    const polAmount = ethers.parseEther(amount);
+
+    showStatus('Sending POL — confirm in wallet...', 'info');
+    const tx = await icoContract.buyWithPOL({ value: polAmount });
+    showStatus('Transaction submitted! Waiting...', 'info');
+    const receipt = await tx.wait();
+
+    showStatus(
+      `✅ Success! Tx: ${receipt.hash.slice(0,10)}...\nView: https://polygonscan.com/tx/${receipt.hash}`,
+      'success'
+    );
+    await loadPublicData();
+  } catch(e) {
+    showStatus('Error: ' + (e.reason || e.message || 'Transaction failed'), 'error');
+  } finally {
+    setBuyLoading(false);
+  }
+}
+
+// ─── HELPERS ──────────────────────────────────────────────
+function setBuyLoading(loading) {
+  const btn = document.getElementById('buyBtn');
+  btn.disabled = loading;
+  btn.innerHTML = loading
+    ? '<span class="spinner"></span>Processing...'
+    : 'Buy PDuka Now';
+}
+
+function showStatus(msg, type) {
+  const box = document.getElementById('statusBox');
+  box.textContent = msg;
+  box.className = type;
+}
+
+function hideStatus() {
+  document.getElementById('statusBox').className = '';
+}
+</script>
+</body>
+</html>
