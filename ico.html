@@ -1,8 +1,13 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Buy PDuka — PayDuka ICO</title><link href="https://fonts.googleapis.com/css2?family=Space+Mono&family=Syne:wght@400;700&display=swap" rel="stylesheet"/><style>
+<title>Buy PDuka — PayDuka ICO</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono&family=Syne:wght@400;700&display=swap" rel="stylesheet"/>
+
+<style>
 :root {
   --green:#00ff88;
   --dark:#060d0a;
@@ -48,6 +53,7 @@ button {
   background:var(--green);
   border:none;
   font-weight:bold;
+  cursor:pointer;
 }
 
 .receive-box {
@@ -56,21 +62,78 @@ button {
   border:1px solid rgba(0,255,136,0.2);
   border-radius:12px;
 }
-</style></head><body><div class="container"><h2>Buy PDuka</h2><div class="buy-card"><button id="connectBtn" onclick="connectWallet()">Connect Wallet</button>
+</style>
+</head>
 
-<input id="amountInput" type="number" placeholder="Enter amount" oninput="updatePreview()" /><div style="font-size:11px;color:var(--muted);margin-top:8px;">
+<body>
+
+<div class="container">
+
+<h2>Buy PDuka</h2>
+
+<div class="buy-card">
+
+<!-- CONNECT -->
+<button id="connectBtn" onclick="connectWallet()">Connect Wallet</button>
+
+<!-- NEW: META + TRUST BUTTONS -->
+<div style="display:flex;gap:10px;margin-top:10px;">
+  <a href="https://metamask.app.link/dapp/payduka.xyz"
+     style="flex:1;text-align:center;padding:12px;background:#f6851b;color:#fff;border-radius:10px;text-decoration:none;font-size:12px;">
+     MetaMask
+  </a>
+
+  <a href="https://link.trustwallet.com/open_url?coin_id=60&url=https://payduka.xyz"
+     style="flex:1;text-align:center;padding:12px;background:#3375bb;color:#fff;border-radius:10px;text-decoration:none;font-size:12px;">
+     Trust Wallet
+  </a>
+</div>
+
+<!-- INPUT -->
+<input id="amountInput" type="number"
+placeholder="Enter amount"
+oninput="updatePreview()" />
+
+<div style="font-size:11px;color:var(--muted);margin-top:8px;">
 Min: $10 · Max: $50,000
-</div><div class="receive-box">
-<div>Transaction Preview</div>
-<div id="previewAmount">0 PDuka</div>
-<div id="usdValue">≈ $0.00</div>
-<div style="font-size:11px;color:var(--muted)">Rate from smart contract</div>
-</div><button id="buyBtn" onclick="handleBuy()" disabled>Connect Wallet</button>
+</div>
 
-<div id="statusBox"></div></div><div style="margin-top:20px;font-size:12px;">
+<!-- PREVIEW -->
+<div class="receive-box">
+  <div>Transaction Preview</div>
+
+  <div id="previewAmount">0 PDuka</div>
+  <div id="usdValue">≈ $0.00</div>
+
+  <!-- NEW: instant estimate -->
+  <div id="instantPreview" style="margin-top:8px;color:var(--green);font-weight:bold;">
+    ≈ 0 PDuka (instant estimate)
+  </div>
+
+  <div style="font-size:11px;color:var(--muted)">
+    Rate from smart contract
+  </div>
+</div>
+
+<!-- BUY -->
+<button id="buyBtn" onclick="handleBuy()" disabled>
+Connect Wallet
+</button>
+
+<div id="statusBox"></div>
+
+</div>
+
+<div style="margin-top:20px;font-size:12px;">
 Contract:
 <span id="icoAddrDisplay"></span>
-</div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script><script type="module">
+</div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+
+<script type="module">
 import { createWeb3Modal, defaultConfig } from 'https://esm.sh/@web3modal/ethers@4.2.3';
 
 const ICO_ADDRESS="0xD8358ba36723b860FFC8E9830060a8Cf348B84d3";
@@ -96,8 +159,6 @@ const modal=createWeb3Modal({
 
 let walletConnected=false;
 let polPriceUSD=0;
-let currentTab="USDC";
-let previewTimeout;
 
 document.getElementById('icoAddrDisplay').innerHTML=
 `<a href="https://polygonscan.com/address/${ICO_ADDRESS}" target="_blank">
@@ -123,43 +184,42 @@ modal.subscribeProvider(async({isConnected})=>{
 });
 
 window.updatePreview=function(){
- clearTimeout(previewTimeout);
+ const val=parseFloat(document.getElementById('amountInput').value)||0;
 
- previewTimeout=setTimeout(async()=>{
-  const val=parseFloat(document.getElementById('amountInput').value)||0;
+ if(val<=0){
+  document.getElementById('previewAmount').textContent="0 PDuka";
+  document.getElementById('usdValue').textContent="≈ $0.00";
+  document.getElementById('instantPreview').textContent="≈ 0 PDuka (instant estimate)";
+  return;
+ }
 
-  if(val<=0){
-    document.getElementById('previewAmount').textContent="0 PDuka";
-    document.getElementById('usdValue').textContent="≈ $0.00";
-    return;
-  }
+ // 🔥 instant PDuka estimate (UI layer)
+ const fallbackRate = 0.005;
+ const instantPDuka = val / fallbackRate;
+
+ document.getElementById('instantPreview').textContent =
+ "≈ " + instantPDuka.toLocaleString(undefined,{
+  maximumFractionDigits:2
+ }) + " PDuka (instant estimate)";
+
+ clearTimeout(window.previewTimeout);
+
+ window.previewTimeout=setTimeout(async()=>{
 
   try{
     const rpc=new ethers.JsonRpcProvider("https://polygon-rpc.com");
     const ico=new ethers.Contract(ICO_ADDRESS,ICO_ABI,rpc);
 
-    let usd=0;
-    let pduka=0;
+    const usdcAmount=ethers.parseUnits(val.toString(),6);
+    const result=await ico.previewUSDCPurchase(usdcAmount);
 
-    if(currentTab==="USDC"){
-      const usdcAmount=ethers.parseUnits(val.toString(),6);
-      const result=await ico.previewUSDCPurchase(usdcAmount);
-
-      pduka=Number(ethers.formatEther(result));
-      usd=val;
-    } else {
-      usd=val*polPriceUSD;
-      const usdcEquivalent=ethers.parseUnits(usd.toFixed(6),6);
-      const result=await ico.previewUSDCPurchase(usdcEquivalent);
-
-      pduka=Number(ethers.formatEther(result));
-    }
+    const pduka=Number(ethers.formatEther(result));
 
     document.getElementById('previewAmount').textContent=
       pduka.toLocaleString()+" PDuka";
 
     document.getElementById('usdValue').textContent=
-      "≈ $"+usd.toFixed(2);
+      "≈ $"+val.toFixed(2);
 
   }catch(e){
     console.error(e);
@@ -195,5 +255,7 @@ window.handleBuy=async function(){
 
  document.getElementById('statusBox').textContent="✅ Purchase successful";
 };
-</script></body>
-</html>
+</script>
+
+</body>
+  </html>
