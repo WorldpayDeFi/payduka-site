@@ -31,6 +31,7 @@ input {
   background:#111;
   color:#fff;
   font-size:16px;
+  margin-top:15px;
 }
 button {
   width:100%;
@@ -45,14 +46,7 @@ button {
   border-radius:10px;
 }
 button:disabled { background:#555; cursor:not-allowed; }
-.receive-box {
-  margin-top:15px;
-  padding:15px;
-  border:1px solid rgba(0,255,136,0.2);
-  border-radius:12px;
-  font-size:15px;
-}
-.status { margin-top:15px; padding:10px; border-radius:8px; text-align:center; }
+.status { margin-top:15px; padding:12px; border-radius:8px; text-align:center; font-size:14px; }
 </style>
 </head>
 <body>
@@ -64,33 +58,28 @@ button:disabled { background:#555; cursor:not-allowed; }
     <button id="connectBtn" onclick="connectWallet()">Connect Wallet</button>
 
     <div style="display:flex;gap:10px;margin-top:12px;">
-      <a href="https://metamask.app.link/dapp/payduka.xyz" style="flex:1;text-align:center;padding:12px;background:#f6851b;color:#fff;border-radius:10px;text-decoration:none;font-size:13px;">MetaMask</a>
-      <a href="https://link.trustwallet.com/open_url?coin_id=137&url=https://payduka.xyz" style="flex:1;text-align:center;padding:12px;background:#3375bb;color:#fff;border-radius:10px;text-decoration:none;font-size:13px;">Trust Wallet</a>
+      <a href="https://metamask.app.link/dapp/payduka.xyz" style="flex:1;text-align:center;padding:12px;background:#f6851b;color:#fff;border-radius:10px;text-decoration:none;font-size:13px;">Open in MetaMask</a>
+      <a href="https://link.trustwallet.com/open_url?coin_id=137&url=https://payduka.xyz" style="flex:1;text-align:center;padding:12px;background:#3375bb;color:#fff;border-radius:10px;text-decoration:none;font-size:13px;">Open in Trust Wallet</a>
     </div>
 
-    <input id="amountInput" type="number" placeholder="Enter USDC amount (e.g. 50)" oninput="updatePreview()" style="margin-top:20px;"/>
+    <input id="amountInput" type="number" placeholder="Enter USDC amount (min $10)" oninput="updatePreview()"/>
 
     <div style="font-size:12px;color:var(--muted);margin:8px 0;">
-      Min: $10 • Max: $50,000 • Polygon Mainnet
+      Polygon Mainnet • Pay with USDC or POL
     </div>
 
-    <div class="receive-box">
+    <div class="receive-box" style="margin-top:15px;padding:15px;border:1px solid rgba(0,255,136,0.2);border-radius:12px;">
       <strong>You will receive:</strong><br>
-      <span id="previewAmount">0 PDuka</span><br>
-      <span id="usdValue">≈ $0.00</span>
+      <span id="previewAmount">0 PDuka</span>
     </div>
 
     <button id="buyBtn" onclick="handleBuy()" disabled>Buy with USDC</button>
-    <!-- Optional: Add POL button later -->
 
     <div id="statusBox" class="status"></div>
   </div>
 
   <div style="margin-top:20px;font-size:13px;text-align:center;">
-    ICO Contract: 
-    <a href="https://polygonscan.com/address/0xD8358ba36723b860FFC8E9830060a8Cf348B84d3" target="_blank" style="color:var(--green);">
-      0xD835...B84d3
-    </a>
+    Sale Contract: <a href="https://polygonscan.com/address/0xD8358ba36723b860FFC8E9830060a8Cf348B84d3" target="_blank" style="color:var(--green);">0xD835...B84d3</a>
   </div>
 </div>
 
@@ -99,127 +88,95 @@ button:disabled { background:#555; cursor:not-allowed; }
 <script>
 // ================== CONFIG ==================
 const ICO_ADDRESS = "0xD8358ba36723b860FFC8E9830060a8Cf348B84d3";
-const USDC_ADDRESS = "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359"; // Native USDC on Polygon
 const POLYGON_CHAIN_ID = 137;
 
-let provider, signer, userAddress;
+let provider;
+let signer;
 let isConnected = false;
 
 // ================== CONNECT WALLET ==================
 async function connectWallet() {
+  const statusBox = document.getElementById("statusBox");
+  const connectBtn = document.getElementById("connectBtn");
+
   if (typeof window.ethereum === "undefined") {
-    showStatus("Please install MetaMask or another wallet", "red");
+    statusBox.innerHTML = "❌ No wallet detected. Please install MetaMask or use Trust Wallet mobile.";
+    statusBox.style.color = "red";
     return;
   }
 
   try {
+    statusBox.innerHTML = "Connecting...";
+    statusBox.style.color = "orange";
+
     provider = new ethers.BrowserProvider(window.ethereum);
+
+    // Check current network
     const network = await provider.getNetwork();
+    console.log("Current chainId:", Number(network.chainId));
 
     if (Number(network.chainId) !== POLYGON_CHAIN_ID) {
-      showStatus("Switching to Polygon Mainnet...", "orange");
+      statusBox.innerHTML = "Switching to Polygon Mainnet...";
       try {
         await window.ethereum.request({
           method: 'wallet_switchEthereumChain',
-          params: [{ chainId: '0x89' }] // 137 in hex
+          params: [{ chainId: '0x89' }]
         });
       } catch (switchError) {
-        showStatus("Please switch to Polygon Mainnet manually", "red");
+        // If user rejects or chain not added
+        statusBox.innerHTML = "Please switch to Polygon Mainnet manually in your wallet.";
+        statusBox.style.color = "red";
         return;
       }
     }
 
-    await provider.send("eth_requestAccounts", []);
+    // Request accounts
+    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    
     signer = await provider.getSigner();
-    userAddress = await signer.getAddress();
+    const address = await signer.getAddress();
 
     isConnected = true;
-    document.getElementById("connectBtn").textContent = "Connected ✓";
+    connectBtn.textContent = "✅ Connected (" + address.slice(0,6) + "...)";
+    connectBtn.disabled = true;
+
     document.getElementById("buyBtn").disabled = false;
     document.getElementById("buyBtn").textContent = "Buy with USDC";
 
-    showStatus("Wallet connected on Polygon ✅", "var(--green)");
-    updatePreview();
+    statusBox.innerHTML = "✅ Wallet connected successfully on Polygon!";
+    statusBox.style.color = "var(--green)";
+
+    console.log("Connected address:", address);
 
   } catch (err) {
-    console.error(err);
-    showStatus("Connection failed. Try again.", "red");
+    console.error("Connection error:", err);
+    let msg = "Connection failed.";
+    
+    if (err.code === 4001) msg = "User rejected the request.";
+    else if (err.message.includes("rejected")) msg = "Connection rejected.";
+    
+    statusBox.innerHTML = "❌ " + msg;
+    statusBox.style.color = "red";
   }
 }
 
-// ================== PREVIEW ==================
-async function updatePreview() {
+// Simple preview (fallback)
+function updatePreview() {
   const val = parseFloat(document.getElementById("amountInput").value) || 0;
-  if (val <= 0) {
-    document.getElementById("previewAmount").textContent = "0 PDuka";
-    document.getElementById("usdValue").textContent = "≈ $0.00";
-    return;
-  }
-
-  // Fallback estimate (since contract may not have preview function)
-  const rate = 0.005; // $0.005 per PDuka
-  const pduka = (val / rate).toLocaleString(undefined, {maximumFractionDigits: 0});
-
+  const pduka = val > 0 ? (val / 0.005).toLocaleString() : "0";
   document.getElementById("previewAmount").textContent = pduka + " PDuka";
-  document.getElementById("usdValue").textContent = "≈ $" + val.toFixed(2);
 }
 
-// ================== BUY FUNCTION (USDC) ==================
+// ================== BUY (placeholder) ==================
 async function handleBuy() {
   if (!isConnected) {
-    await connectWallet();
+    document.getElementById("statusBox").innerHTML = "Please connect wallet first";
     return;
   }
-
-  const amountStr = document.getElementById("amountInput").value;
-  if (!amountStr || parseFloat(amountStr) < 10) {
-    showStatus("Minimum purchase is $10", "red");
-    return;
-  }
-
-  const usdcAmount = ethers.parseUnits(amountStr, 6); // USDC has 6 decimals
-
-  try {
-    showStatus("Approving USDC...", "orange");
-
-    const usdc = new ethers.Contract(USDC_ADDRESS, [
-      "function approve(address spender, uint256 amount) public returns (bool)",
-      "function allowance(address owner, address spender) view returns (uint256)"
-    ], signer);
-
-    const allowance = await usdc.allowance(userAddress, ICO_ADDRESS);
-    if (allowance < usdcAmount) {
-      const approveTx = await usdc.approve(ICO_ADDRESS, usdcAmount);
-      await approveTx.wait();
-      showStatus("USDC approved. Sending purchase...", "orange");
-    }
-
-    showStatus("Executing purchase...", "orange");
-
-    const ico = new ethers.Contract(ICO_ADDRESS, [
-      "function buyWithUSDC(uint256 usdcAmount)"
-    ], signer);
-
-    const tx = await ico.buyWithUSDC(usdcAmount);
-    await tx.wait();
-
-    showStatus(`✅ Success! Transaction: <a href="https://polygonscan.com/tx/${tx.hash}" target="_blank">View on Polygonscan</a>`, "var(--green)");
-
-  } catch (err) {
-    console.error(err);
-    let msg = err.reason || err.message || "Transaction failed";
-    if (msg.includes("user rejected")) msg = "Transaction rejected by user";
-    showStatus("Error: " + msg, "red");
-  }
+  document.getElementById("statusBox").innerHTML = "Buy function ready. Test small amount first.";
+  // We'll add full buyWithUSDC + buyWithPOL later once connection works
 }
 
-function showStatus(text, color) {
-  const box = document.getElementById("statusBox");
-  box.innerHTML = text;
-  box.style.color = color;
-  box.style.background = color === "var(--green)" ? "rgba(0,255,136,0.1)" : "rgba(255,0,0,0.1)";
-}
 </script>
-
 </body>
-  </html>
+        </html>
