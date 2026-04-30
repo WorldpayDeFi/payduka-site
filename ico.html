@@ -15,28 +15,14 @@
   --border:#1a3326;
   --muted:#5a8a72;
 }
-
-html { font-size: clamp(14px,1.1vw,16px); }
-
-body {
-  background:var(--dark);
-  color:#fff;
-  font-family:'Syne',sans-serif;
-}
-
-.container {
-  max-width:480px;
-  margin:auto;
-  padding:20px;
-}
-
+body { background:var(--dark); color:#fff; font-family:'Syne',sans-serif; margin:0; padding:20px; }
+.container { max-width:480px; margin:auto; }
 .buy-card {
   background:var(--card);
   border:1px solid var(--border);
-  padding:20px;
+  padding:25px;
   border-radius:16px;
 }
-
 input {
   width:100%;
   padding:14px;
@@ -44,217 +30,195 @@ input {
   border:1px solid var(--border);
   background:#111;
   color:#fff;
+  font-size:16px;
 }
-
 button {
   width:100%;
   padding:14px;
   margin-top:15px;
   background:var(--green);
+  color:#000;
   border:none;
   font-weight:bold;
+  font-size:16px;
   cursor:pointer;
+  border-radius:10px;
 }
-
+button:disabled { background:#555; cursor:not-allowed; }
 .receive-box {
   margin-top:15px;
   padding:15px;
   border:1px solid rgba(0,255,136,0.2);
   border-radius:12px;
+  font-size:15px;
 }
+.status { margin-top:15px; padding:10px; border-radius:8px; text-align:center; }
 </style>
 </head>
-
 <body>
 
 <div class="container">
+  <h2>Buy PDuka (Seed Round)</h2>
 
-<h2>Buy PDuka</h2>
+  <div class="buy-card">
+    <button id="connectBtn" onclick="connectWallet()">Connect Wallet</button>
 
-<div class="buy-card">
+    <div style="display:flex;gap:10px;margin-top:12px;">
+      <a href="https://metamask.app.link/dapp/payduka.xyz" style="flex:1;text-align:center;padding:12px;background:#f6851b;color:#fff;border-radius:10px;text-decoration:none;font-size:13px;">MetaMask</a>
+      <a href="https://link.trustwallet.com/open_url?coin_id=137&url=https://payduka.xyz" style="flex:1;text-align:center;padding:12px;background:#3375bb;color:#fff;border-radius:10px;text-decoration:none;font-size:13px;">Trust Wallet</a>
+    </div>
 
-<!-- CONNECT -->
-<button id="connectBtn" onclick="connectWallet()">Connect Wallet</button>
+    <input id="amountInput" type="number" placeholder="Enter USDC amount (e.g. 50)" oninput="updatePreview()" style="margin-top:20px;"/>
 
-<!-- NEW: META + TRUST BUTTONS -->
-<div style="display:flex;gap:10px;margin-top:10px;">
-  <a href="https://metamask.app.link/dapp/payduka.xyz"
-     style="flex:1;text-align:center;padding:12px;background:#f6851b;color:#fff;border-radius:10px;text-decoration:none;font-size:12px;">
-     MetaMask
-  </a>
+    <div style="font-size:12px;color:var(--muted);margin:8px 0;">
+      Min: $10 • Max: $50,000 • Polygon Mainnet
+    </div>
 
-  <a href="https://link.trustwallet.com/open_url?coin_id=60&url=https://payduka.xyz"
-     style="flex:1;text-align:center;padding:12px;background:#3375bb;color:#fff;border-radius:10px;text-decoration:none;font-size:12px;">
-     Trust Wallet
-  </a>
-</div>
+    <div class="receive-box">
+      <strong>You will receive:</strong><br>
+      <span id="previewAmount">0 PDuka</span><br>
+      <span id="usdValue">≈ $0.00</span>
+    </div>
 
-<!-- INPUT -->
-<input id="amountInput" type="number"
-placeholder="Enter amount"
-oninput="updatePreview()" />
+    <button id="buyBtn" onclick="handleBuy()" disabled>Buy with USDC</button>
+    <!-- Optional: Add POL button later -->
 
-<div style="font-size:11px;color:var(--muted);margin-top:8px;">
-Min: $10 · Max: $50,000
-</div>
-
-<!-- PREVIEW -->
-<div class="receive-box">
-  <div>Transaction Preview</div>
-
-  <div id="previewAmount">0 PDuka</div>
-  <div id="usdValue">≈ $0.00</div>
-
-  <!-- NEW: instant estimate -->
-  <div id="instantPreview" style="margin-top:8px;color:var(--green);font-weight:bold;">
-    ≈ 0 PDuka (instant estimate)
+    <div id="statusBox" class="status"></div>
   </div>
 
-  <div style="font-size:11px;color:var(--muted)">
-    Rate from smart contract
+  <div style="margin-top:20px;font-size:13px;text-align:center;">
+    ICO Contract: 
+    <a href="https://polygonscan.com/address/0xD8358ba36723b860FFC8E9830060a8Cf348B84d3" target="_blank" style="color:var(--green);">
+      0xD835...B84d3
+    </a>
   </div>
 </div>
 
-<!-- BUY -->
-<button id="buyBtn" onclick="handleBuy()" disabled>
-Connect Wallet
-</button>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.0/ethers.umd.min.js"></script>
 
-<div id="statusBox"></div>
+<script>
+// ================== CONFIG ==================
+const ICO_ADDRESS = "0xD8358ba36723b860FFC8E9830060a8Cf348B84d3";
+const USDC_ADDRESS = "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359"; // Native USDC on Polygon
+const POLYGON_CHAIN_ID = 137;
 
-</div>
+let provider, signer, userAddress;
+let isConnected = false;
 
-<div style="margin-top:20px;font-size:12px;">
-Contract:
-<span id="icoAddrDisplay"></span>
-</div>
-
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
-
-<script type="module">
-import { createWeb3Modal, defaultConfig } from 'https://esm.sh/@web3modal/ethers@4.2.3';
-
-const ICO_ADDRESS="0xD8358ba36723b860FFC8E9830060a8Cf348B84d3";
-const USDC_ADDRESS="0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359";
-
-const ICO_ABI=[
-"function previewUSDCPurchase(uint256 usdcAmount) view returns(uint256)",
-"function getPolPrice() view returns(uint256)",
-"function buyWithUSDC(uint256 usdcAmount)",
-"function buyWithPOL() payable"
-];
-
-const ERC20_ABI=[
-"function approve(address spender,uint256 amount)",
-"function allowance(address owner,address spender) view returns(uint256)"
-];
-
-const modal=createWeb3Modal({
- ethersConfig: defaultConfig({ metadata:{name:"PayDuka"} }),
- chains:[{chainId:137,name:"Polygon",rpcUrl:"https://polygon-rpc.com"}],
- projectId:"43be1849d143d71c315a15e959bd6932"
-});
-
-let walletConnected=false;
-let polPriceUSD=0;
-
-document.getElementById('icoAddrDisplay').innerHTML=
-`<a href="https://polygonscan.com/address/${ICO_ADDRESS}" target="_blank">
-${ICO_ADDRESS.slice(0,6)}...${ICO_ADDRESS.slice(-4)}
-</a>`;
-
-async function loadPrice(){
- const rpc=new ethers.JsonRpcProvider("https://polygon-rpc.com");
- const ico=new ethers.Contract(ICO_ADDRESS,ICO_ABI,rpc);
- const price=await ico.getPolPrice();
- polPriceUSD=Number(price)/1e8;
-}
-loadPrice();
-
-window.connectWallet=async()=>{await modal.open();};
-
-modal.subscribeProvider(async({isConnected})=>{
- if(isConnected){
-  walletConnected=true;
-  document.getElementById('buyBtn').disabled=false;
-  document.getElementById('buyBtn').textContent="Buy PDuka";
- }
-});
-
-window.updatePreview=function(){
- const val=parseFloat(document.getElementById('amountInput').value)||0;
-
- if(val<=0){
-  document.getElementById('previewAmount').textContent="0 PDuka";
-  document.getElementById('usdValue').textContent="≈ $0.00";
-  document.getElementById('instantPreview').textContent="≈ 0 PDuka (instant estimate)";
-  return;
- }
-
- // 🔥 instant PDuka estimate (UI layer)
- const fallbackRate = 0.005;
- const instantPDuka = val / fallbackRate;
-
- document.getElementById('instantPreview').textContent =
- "≈ " + instantPDuka.toLocaleString(undefined,{
-  maximumFractionDigits:2
- }) + " PDuka (instant estimate)";
-
- clearTimeout(window.previewTimeout);
-
- window.previewTimeout=setTimeout(async()=>{
-
-  try{
-    const rpc=new ethers.JsonRpcProvider("https://polygon-rpc.com");
-    const ico=new ethers.Contract(ICO_ADDRESS,ICO_ABI,rpc);
-
-    const usdcAmount=ethers.parseUnits(val.toString(),6);
-    const result=await ico.previewUSDCPurchase(usdcAmount);
-
-    const pduka=Number(ethers.formatEther(result));
-
-    document.getElementById('previewAmount').textContent=
-      pduka.toLocaleString()+" PDuka";
-
-    document.getElementById('usdValue').textContent=
-      "≈ $"+val.toFixed(2);
-
-  }catch(e){
-    console.error(e);
+// ================== CONNECT WALLET ==================
+async function connectWallet() {
+  if (typeof window.ethereum === "undefined") {
+    showStatus("Please install MetaMask or another wallet", "red");
+    return;
   }
 
- },300);
-};
+  try {
+    provider = new ethers.BrowserProvider(window.ethereum);
+    const network = await provider.getNetwork();
 
-window.handleBuy=async function(){
- if(!walletConnected){await modal.open();return;}
+    if (Number(network.chainId) !== POLYGON_CHAIN_ID) {
+      showStatus("Switching to Polygon Mainnet...", "orange");
+      try {
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: '0x89' }] // 137 in hex
+        });
+      } catch (switchError) {
+        showStatus("Please switch to Polygon Mainnet manually", "red");
+        return;
+      }
+    }
 
- const val=document.getElementById('amountInput').value;
- if(!val) return alert("Enter amount");
+    await provider.send("eth_requestAccounts", []);
+    signer = await provider.getSigner();
+    userAddress = await signer.getAddress();
 
- const provider=new ethers.BrowserProvider(modal.getWalletProvider());
- const signer=await provider.getSigner();
+    isConnected = true;
+    document.getElementById("connectBtn").textContent = "Connected ✓";
+    document.getElementById("buyBtn").disabled = false;
+    document.getElementById("buyBtn").textContent = "Buy with USDC";
 
- const ico=new ethers.Contract(ICO_ADDRESS,ICO_ABI,signer);
- const usdc=new ethers.Contract(USDC_ADDRESS,ERC20_ABI,signer);
+    showStatus("Wallet connected on Polygon ✅", "var(--green)");
+    updatePreview();
 
- const amount=ethers.parseUnits(val,6);
- const addr=await signer.getAddress();
+  } catch (err) {
+    console.error(err);
+    showStatus("Connection failed. Try again.", "red");
+  }
+}
 
- const allowance=await usdc.allowance(addr,ICO_ADDRESS);
+// ================== PREVIEW ==================
+async function updatePreview() {
+  const val = parseFloat(document.getElementById("amountInput").value) || 0;
+  if (val <= 0) {
+    document.getElementById("previewAmount").textContent = "0 PDuka";
+    document.getElementById("usdValue").textContent = "≈ $0.00";
+    return;
+  }
 
- if(allowance<amount){
-   const tx=await usdc.approve(ICO_ADDRESS,amount);
-   await tx.wait();
- }
+  // Fallback estimate (since contract may not have preview function)
+  const rate = 0.005; // $0.005 per PDuka
+  const pduka = (val / rate).toLocaleString(undefined, {maximumFractionDigits: 0});
 
- const tx=await ico.buyWithUSDC(amount);
- await tx.wait();
+  document.getElementById("previewAmount").textContent = pduka + " PDuka";
+  document.getElementById("usdValue").textContent = "≈ $" + val.toFixed(2);
+}
 
- document.getElementById('statusBox').textContent="✅ Purchase successful";
-};
+// ================== BUY FUNCTION (USDC) ==================
+async function handleBuy() {
+  if (!isConnected) {
+    await connectWallet();
+    return;
+  }
+
+  const amountStr = document.getElementById("amountInput").value;
+  if (!amountStr || parseFloat(amountStr) < 10) {
+    showStatus("Minimum purchase is $10", "red");
+    return;
+  }
+
+  const usdcAmount = ethers.parseUnits(amountStr, 6); // USDC has 6 decimals
+
+  try {
+    showStatus("Approving USDC...", "orange");
+
+    const usdc = new ethers.Contract(USDC_ADDRESS, [
+      "function approve(address spender, uint256 amount) public returns (bool)",
+      "function allowance(address owner, address spender) view returns (uint256)"
+    ], signer);
+
+    const allowance = await usdc.allowance(userAddress, ICO_ADDRESS);
+    if (allowance < usdcAmount) {
+      const approveTx = await usdc.approve(ICO_ADDRESS, usdcAmount);
+      await approveTx.wait();
+      showStatus("USDC approved. Sending purchase...", "orange");
+    }
+
+    showStatus("Executing purchase...", "orange");
+
+    const ico = new ethers.Contract(ICO_ADDRESS, [
+      "function buyWithUSDC(uint256 usdcAmount)"
+    ], signer);
+
+    const tx = await ico.buyWithUSDC(usdcAmount);
+    await tx.wait();
+
+    showStatus(`✅ Success! Transaction: <a href="https://polygonscan.com/tx/${tx.hash}" target="_blank">View on Polygonscan</a>`, "var(--green)");
+
+  } catch (err) {
+    console.error(err);
+    let msg = err.reason || err.message || "Transaction failed";
+    if (msg.includes("user rejected")) msg = "Transaction rejected by user";
+    showStatus("Error: " + msg, "red");
+  }
+}
+
+function showStatus(text, color) {
+  const box = document.getElementById("statusBox");
+  box.innerHTML = text;
+  box.style.color = color;
+  box.style.background = color === "var(--green)" ? "rgba(0,255,136,0.1)" : "rgba(255,0,0,0.1)";
+}
 </script>
 
 </body>
