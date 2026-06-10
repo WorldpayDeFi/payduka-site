@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PayDuka Whitepaper v3.0 — Africa's Instant Payment Platform</title>
+  <meta name="description" content="PayDuka Whitepaper v3.0. The PIX of Africa. Instant bank-to-bank payments, wallet-to-wallet settlement, card advance engine, and blockchain audit layer." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    :root {
+      --bg:        #FAF7F2;
+      --bg2:       #F3EEE6;
+      --bg3:       #EDE7DC;
+      --surface:   #FFFFFF;
+      --ink:       #1A1815;
+      --ink2:      #2D2A25;
+      --ink-soft:  #4A4640;
+      --ink-muted: #7A756C;
+      --ink-faint: #A8A29A;
+      --gold:      #B8943E;
+      --gold2:     #A07F2E;
+      --gold-bg:   rgba(184,148,62,0.08);
+      --gold-border: rgba(184,148,62,0.2);
+      --border:    rgba(26,24,21,0.08);
+      --border2:   rgba(26,24,21,0.05);
+      --font-head: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--ink-soft);
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+
+    a { color: var(--gold2); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* TOPBAR */
+    .topbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(250,247,242,0.92);
+      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border);
+      height: 56px; display: flex; align-items: center; padding: 0 2rem;
+    }
+    .topbar-inner {
+      max-width: 860px; margin: 0 auto; width: 100%;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .topbar-logo {
+      font-family: var(--font-head); font-weight: 700; font-size: 1rem;
+      color: var(--ink); letter-spacing: -0.02em;
+      display: flex; align-items: center; gap: 0.5rem; text-decoration: none;
+    }
+    .topbar-logo:hover { text-decoration: none; }
+    .topbar-logo .hex {
+      width: 26px; height: 26px;
+      background: linear-gradient(135deg, var(--gold), #D4BA78);
+      clip-path: polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.5rem; font-weight: 700; color: #fff; font-family: var(--font-head);
+    }
+    .topbar-links { display: flex; gap: 1.5rem; align-items: center; }
+    .topbar-links a {
+      font-size: 0.72rem; font-weight: 500; color: var(--ink-muted);
+      letter-spacing: 0.03em; text-decoration: none; transition: color 0.2s;
+    }
+    .topbar-links a:hover { color: var(--ink); text-decoration: none; }
+    .topbar-cta {
+      background: var(--gold) !important; color: #fff !important;
+      font-family: var(--font-head) !important; font-weight: 600 !important;
+      font-size: 0.7rem !important; padding: 0.35rem 0.9rem !important;
+      border-radius: 3px; transition: background 0.2s !important;
+    }
+    .topbar-cta:hover { background: var(--gold2) !important; }
+
+    /* WRAPPER */
+    .wp { max-width: 780px; margin: 0 auto; padding: 7rem 2rem 5rem; }
+
+    /* COVER */
+    .cover { text-align: center; padding: 4rem 0 3.5rem; border-bottom: 1px solid var(--border); margin-bottom: 3.5rem; }
+    .cover-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--gold-bg); border: 1px solid var(--gold-border);
+      color: var(--gold); border-radius: 2px;
+      font-family: var(--font-mono); font-size: 0.6rem; font-weight: 500;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      padding: 0.3rem 0.9rem; margin-bottom: 2rem;
+    }
+    .cover h1 {
+      font-family: var(--font-head); font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700; color: var(--ink); line-height: 1.1;
+      letter-spacing: -0.03em; margin-bottom: 1rem;
+    }
+    .cover h1 .a { color: var(--gold); }
+    .cover-sub {
+      font-size: 0.95rem; color: var(--ink-muted); max-width: 540px;
+      margin: 0 auto 1.5rem; line-height: 1.65;
+    }
+    .cover-meta {
+      font-family: var(--font-mono); font-size: 0.6rem;
+      letter-spacing: 0.1em; color: var(--ink-faint);
+    }
+
+    /* TOC */
+    .toc {
+      border: 1px solid var(--border); border-radius: 6px;
+      padding: 2.5rem; margin-bottom: 3.5rem; background: var(--surface);
+    }
+    .toc h2 {
+      font-family: var(--font-head); font-size: 1.1rem;
+      font-weight: 700; color: var(--ink); margin-bottom: 1.5rem;
+    }
+    .toc ol { list-style: none; counter-reset: toc; column-count: 2; column-gap: 2rem; }
+    .toc ol li {
+      counter-increment: toc; padding: 0.35rem 0;
+      border-bottom: 1px solid var(--border2); font-size: 0.85rem;
+      break-inside: avoid;
+    }
+    .toc ol li:last-child { border-bottom: none; }
+    .toc ol li::before {
+      content: counter(toc, decimal-leading-zero) '.';
+      font-family: var(--font-mono); font-size: 0.72rem;
+      color: var(--gold); margin-right: 0.6rem; font-weight: 500;
+    }
+    .toc ol li a { color: var(--ink-soft); text-decoration: none; }
+    .toc ol li a:hover { color: var(--gold); }
+
+    /* SECTIONS */
+    .s { margin-bottom: 3.5rem; padding-bottom: 3rem; border-bottom: 1px solid var(--border2); }
+    .s:last-of-type { border-bottom: none; }
+    .sn {
+      font-family: var(--font-mono); font-size: 0.62rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 0.4rem; display: block;
+    }
+    .s h2 {
+      font-family: var(--font-head); font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 700; color: var(--ink); margin-bottom: 1.25rem;
+      letter-spacing: -0.02em; line-height: 1.15;
+    }
+    .s h3 {
+      font-family: var(--font-head); font-size: 1.1rem;
+      font-weight: 600; color: var(--ink2); margin: 2rem 0 0.75rem;
+      letter-spacing: -0.01em;
+    }
+    .s h4 {
+      font-family: var(--font-head); font-size: 0.95rem;
+      font-weight: 600; color: var(--ink2); margin: 1.5rem 0 0.5rem;
+    }
+    .s p { color: var(--ink-soft); font-size: 0.92rem; line-height: 1.8; margin-bottom: 1rem; }
+    .s ul { margin: 0.75rem 0 1.25rem; padding-left: 0; list-style: none; }
+    .s ul li {
+      font-size: 0.9rem; color: var(--ink-soft); line-height: 1.7;
+      padding: 0.3rem 0; display: flex; gap: 0.6rem;
+    }
+    .s ul li::before {
+      content: '—'; color: var(--gold); flex-shrink: 0;
+      font-family: var(--font-mono); font-weight: 500;
+    }
+
+    /* TABLES */
+    .tw { overflow-x: auto; margin: 1.5rem 0; }
+    .t {
+      width: 100%; border-collapse: collapse; font-size: 0.82rem;
+      background: var(--surface); border-radius: 6px;
+      overflow: hidden; border: 1px solid var(--border);
+    }
+    .t thead th {
+      font-family: var(--font-mono); font-size: 0.58rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--gold); text-align: left;
+      padding: 0.85rem 1rem; background: var(--bg2);
+      border-bottom: 1px solid var(--border); white-space: nowrap;
+    }
+    .t tbody td {
+      padding: 0.7rem 1rem; border-bottom: 1px solid var(--border2);
+      color: var(--ink-soft); vertical-align: top;
+    }
+    .t tbody tr:last-child td { border-bottom: none; }
+    .t tbody tr:hover { background: var(--bg2); }
+    .t .hl { color: var(--gold); font-weight: 600; }
+
+    /* CALLOUT */
+    .co {
+      padding: 1.5rem 2rem; margin: 1.5rem 0;
+      border-left: 3px solid var(--gold);
+      background: var(--gold-bg); border-radius: 0 6px 6px 0;
+    }
+    .co p { color: var(--ink2); margin-bottom: 0; font-weight: 500; }
+
+    /* STAT ROW */
+    .stats {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .stat {
+      text-align: center; padding: 1.25rem; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 6px;
+    }
+    .stat-v {
+      font-family: var(--font-head); font-size: 1.4rem;
+      font-weight: 700; color: var(--gold); letter-spacing: -0.02em;
+    }
+    .stat-l {
+      font-family: var(--font-mono); font-size: 0.55rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--ink-muted); margin-top: 0.2rem;
+    }
+
+    /* FOOTER */
+    .wf {
+      text-align: center; padding: 3rem 0 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .wf p { font-size: 0.68rem; color: var(--ink-faint); line-height: 1.6; max-width: 520px; margin: 0 auto; }
+
+    @media print {
+      .topbar { display: none; }
+      .wp { padding-top: 0; }
+      body { background: #fff; }
+    }
+    @media (max-width: 768px) {
+      .wp { padding: 5rem 1.25rem 3rem; }
+      .cover { padding: 3rem 0 2.5rem; }
+      .topbar-links a:not(.topbar-cta) { display: none; }
+      .toc ol { column-count: 1; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a href="https://payduka.xyz/" class="topbar-logo"><div class="hex">PD</div> PayDuka</a>
+    <div class="topbar-links">
+      <a href="https://payduka.xyz/">Back to Site</a>
+      <a href="https://payduka.xyz/PayDuka_Whitepaper_v2.0.pdf">Download PDF</a>
+      <a href="https://payduka.xyz/ico.html" class="topbar-cta">Buy PDuka</a>
+    </div>
+  </div>
+</div>
+
+<div class="wp">
+
+<!-- ==================== COVER ==================== -->
+<div class="cover">
+  <div class="cover-badge">Whitepaper v3.0 &middot; June 2026</div>
+  <h1>PayDuka<br />The <span class="a">PIX of Africa</span></h1>
+  <p class="cover-sub">Instant bank-to-bank retail payments. Zero card network fees. Wallet-to-wallet settlement. Same-day card advances. Blockchain audit layer. Built on South Africa's live payment rails.</p>
+  <div class="cover-meta">payduka.xyz &middot; info@payduka.xyz &middot; Version 3.0</div>
+</div>
+
+<!-- ==================== TOC ==================== -->
+<div class="toc">
+  <h2>Table of Contents</h2>
+  <ol>
+    <li><a href="#s1">Abstract</a></li>
+    <li><a href="#s2">Introduction & Vision</a></li>
+    <li><a href="#s3">Problem Statement</a></li>
+    <li><a href="#s4">The PIX Proof</a></li>
+    <li><a href="#s5">The PayDuka Solution</a></li>
+    <li><a href="#s6">Three Payment Pathways</a></li>
+    <li><a href="#s7">The Auto-Refill Wallet</a></li>
+    <li><a href="#s8">The Card Advance Engine</a></li>
+    <li><a href="#s9">Technology Architecture</a></li>
+    <li><a href="#s10">PDuka Token & Tokenomics</a></li>
+    <li><a href="#s11">Monetary Policy</a></li>
+    <li><a href="#s12">ICO & Token Sale</a></li>
+    <li><a href="#s13">Business Model & Revenue</a></li>
+    <li><a href="#s14">Franchise Strategy</a></li>
+    <li><a href="#s15">Play-to-Earn Gaming</a></li>
+    <li><a href="#s16">Market Opportunity</a></li>
+    <li><a href="#s17">Competitive Landscape</a></li>
+    <li><a href="#s18">Roadmap & Budget</a></li>
+    <li><a href="#s19">Social Impact</a></li>
+    <li><a href="#s20">Legal & Compliance</a></li>
+    <li><a href="#s21">Risk Factors</a></li>
+    <li><a href="#s22">Team</a></li>
+    <li><a href="#s23">Conclusion</a></li>
+  </ol>
+</div>
+
+<!-- ==================== 01 ABSTRACT ==================== -->
+<div class="s" id="s1">
+  <span class="sn">01</span>
+  <h2>Abstract</h2>
+  <p>PayDuka is an instant retail payment platform built for Africa. It eliminates card network fees &mdash; the 2.5&ndash;3.5% toll that Visa, Mastercard, and intermediary banks extract from every transaction &mdash; by routing payments through South Africa's live bank-to-bank rails (PayShap, Capitec Pay) and an internal wallet-to-wallet ledger.</p>
+  <p>The platform draws directly from the proven PIX model in Brazil, which processed 7.9 billion monthly transactions in 2025 and moved USD 6.7 trillion that year alone, reducing average merchant fees from over 2% to 0.22%. South Africa's PayShap infrastructure &mdash; now live across 11 banks with R742 billion processed and 811 million transactions &mdash; provides the identical underlying rail. What is missing is the application layer. PayDuka is that layer.</p>
+  <p>For merchants who still accept card payments, PayDuka offers a same-day cash advance engine &mdash; advancing settlement funds instantly against authorised card receivables for a 1&ndash;2% fee, solving the 1&ndash;3 day cash-flow gap that no South African competitor addresses. The native PDuka token (ERC-20 on Polygon) provides loyalty discounts, staking rewards, governance voting, and an immutable blockchain audit trail &mdash; entirely decoupled from the core payment engine so that operations run uninterrupted regardless of blockchain conditions.</p>
+  <div class="co"><p>PayDuka is not a crypto payment protocol. It is a fintech platform that uses existing banking rails to deliver instant, ultra-low-cost payments &mdash; with blockchain as an optional transparency and reward layer.</p></div>
+</div>
+
+<!-- ==================== 02 INTRODUCTION ==================== -->
+<div class="s" id="s2">
+  <span class="sn">02</span>
+  <h2>Introduction & Vision</h2>
+  <p>Africa is home to over 44 million small and medium-sized enterprises, the vast majority of which operate on cash or pay crippling card-processing fees. An estimated 57% of Sub-Saharan Africa's adult population &mdash; over 400 million people &mdash; remain without a formal bank account. Mobile money solutions like M-Pesa have made inroads but remain siloed within national borders and operator networks.</p>
+  <p>Meanwhile, South Africa's payment infrastructure has quietly reached a critical maturity threshold. PayShap launched in March 2023 and has since processed R742 billion across 811 million transactions with 5.6 million registered ShapIDs. Capitec Pay offers direct account-to-account merchant payments capped at R7 per transaction. PayShap Request (launched December 2024) enables real-time payment requests from merchants to customers. The rails are live. The 11 largest banks are integrated. What South Africa lacks is a consumer-facing application that unifies these rails into a seamless, SnapScan-like QR-scan experience &mdash; at a fraction of the cost.</p>
+  <p>PayDuka's vision is to become the PIX of Africa: a single application layer that captures bank-to-bank instant payments, wallet-to-wallet transfers, and card acceptance with same-day advances &mdash; then extends into cross-border settlement, loyalty tokenomics, and franchise retail integration.</p>
+</div>
+
+<!-- ==================== 03 PROBLEM ==================== -->
+<div class="s" id="s3">
+  <span class="sn">03</span>
+  <h2>Problem Statement</h2>
+  <h3>3.1 The Fee Toll</h3>
+  <p>A merchant processing R100,000 per month on cards loses R2,500 to R3,500 monthly &mdash; or R30,000 to R42,000 per year &mdash; to interchange, acquiring fees, and processor margins. SnapScan charges 2.95% per transaction. Yoco charges 2.6&ndash;2.75%. These fees are functionally identical because every QR-code or card-terminal product in South Africa routes through the same Visa/Mastercard card network rails. The QR code is a prettier front door to the same expensive house.</p>
+  <h3>3.2 The Settlement Delay</h3>
+  <p>Card networks authorise transactions instantly but settle funds in 1&ndash;3 business days. A restaurant that processes R30,000 on a Friday evening cannot access those funds to buy fresh stock on Saturday morning. Small businesses are systematically choked of basic operational capital by scheme-imposed settlement timelines. No South African competitor offers same-day access to card receivables.</p>
+  <h3>3.3 Financial Exclusion</h3>
+  <p>Over 400 million adults across Sub-Saharan Africa remain outside the formal financial system. Cards and SnapScan were never built for them. The infrastructure to serve them now exists in South Africa through PayShap and Capitec Pay &mdash; what is missing is an accessible application that requires no bank account, no card, and no monthly fees.</p>
+  <h3>3.4 Cash-Related Crime</h3>
+  <p>Cash dependency creates acute security risks. Armed robberies targeting retail premises represent a disproportionate share of urban violent crime. Counterfeit currency exposes merchants to losses with no recourse. Digital payments verified in real time make both structurally impossible.</p>
+  <div class="co"><p>The core problem is not a lack of technology. It is the absence of a consumer-facing application that bypasses card networks entirely, routes payments through cheaper existing bank-to-bank rails, and provides instant settlement to merchants.</p></div>
+</div>
+
+<!-- ==================== 04 PIX PROOF ==================== -->
+<div class="s" id="s4">
+  <span class="sn">04</span>
+  <h2>The PIX Proof</h2>
+  <p>PayDuka is not inventing a new paradigm. The model has been proven at nation-scale in Brazil.</p>
+  <p>PIX launched in November 2020. By 2025 it processed 7.9 billion transactions per month, moved USD 6.7 trillion in annual volume, and reached 170 million active users &mdash; 93% of Brazil's adult population. Average merchant fees dropped from over 2% to approximately 0.22%. Person-to-business payments surpassed person-to-person transfers for the first time in September 2025. EBANX merchants offering PIX saw a 16% average revenue increase and 25% customer-base growth within six months of integration.</p>
+  <div class="stats">
+    <div class="stat"><div class="stat-v">7.9B</div><div class="stat-l">Monthly Txns (2025)</div></div>
+    <div class="stat"><div class="stat-v">$6.7T</div><div class="stat-l">Annual Volume</div></div>
+    <div class="stat"><div class="stat-v">170M</div><div class="stat-l">Active Users</div></div>
+    <div class="stat"><div class="stat-v">0.22%</div><div class="stat-l">Avg Merchant Fee</div></div>
+  </div>
+  <p>South Africa's PayShap provides the same foundational capability: instant interbank settlement, QR-code payments (in development via Electrum), ShapID proxy addressing, and PayShap Request for merchant-initiated payment pulls. PayShap has processed R742 billion across 811 million transactions with 5.6 million ShapIDs. Capitec Pay caps merchant fees at R7. The rails are live. The application layer is missing. That is the opportunity.</p>
+  <div class="stats">
+    <div class="stat"><div class="stat-v">R742B</div><div class="stat-l">PayShap Processed</div></div>
+    <div class="stat"><div class="stat-v">811M</div><div class="stat-l">Transactions</div></div>
+    <div class="stat"><div class="stat-v">R7 cap</div><div class="stat-l">Capitec Pay Fee</div></div>
+    <div class="stat"><div class="stat-v">11</div><div class="stat-l">Banks Integrated</div></div>
+  </div>
+</div>
+
+<!-- ==================== 05 SOLUTION ==================== -->
+<div class="s" id="s5">
+  <span class="sn">05</span>
+  <h2>The PayDuka Solution</h2>
+  <h3>5.1 Core Proposition</h3>
+  <p>PayDuka is a multi-rail payment platform that automatically routes each transaction through the cheapest and fastest available path. Merchants display a single QR code. Customers scan, confirm with fingerprint, and pay. The platform handles rail selection, fee optimisation, and settlement invisibly.</p>
+  <h3>5.2 Five-Pillar Ecosystem</h3>
+  <div class="tw">
+    <table class="t">
+      <thead><tr><th>Pillar</th><th>Description</th><th>Token Role</th></tr></thead>
+      <tbody>
+        <tr><td>Instant Payments</td><td>QR-code wallet-to-wallet and bank-to-bank settlement via PayShap, Capitec Pay, and internal ledger. Sub-2 second settlement.</td><td>Fee discounts for PDuka holders</td></tr>
+        <tr><td>Card Advance Engine</td><td>Accept Visa/Mastercard with same-day advance of settlement funds at 1&ndash;2% fee.</td><td>Advance fee reduction for staked tokens</td></tr>
+        <tr><td>Staking & Governance</td><td>8&ndash;15% APY with 30&ndash;365 day lock-up. 1 staked PDuka = 1 vote.</td><td>Staked PDuka earns rewards and voting rights</td></tr>
+        <tr><td>Play-to-Earn</td><td>Mobile games with daily PDuka rewards and embedded financial literacy.</td><td>PDuka earned and spent in-game</td></tr>
+        <tr><td>Franchise Integration</td><td>Pilot franchise retail locations as live proof-of-concept with blockchain payroll.</td><td>PDuka powers payroll and in-store transactions</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Each pillar reinforces the others. A merchant accepting PayDuka payments encounters staking. A gamer earning PDuka becomes a consumer. A franchise employee receiving blockchain payroll becomes a token holder with governance rights. This interconnectivity is what distinguishes PayDuka from single-feature payment products.</p>
+</div>
+
+<!-- ==================== 06 THREE PATHWAYS ==================== -->
+<div class="s" id="s6">
+  <span class="sn">06</span>
+  <h2>Three Payment Pathways</h2>
+  <p>One interface. The merchant receives the lowest fee and fastest settlement automatically.</p>
+  <div class="tw">
+    <table class="t">
+      <thead><tr><th>Path</th><th>Mechanism</th><th>Merchant Fee</th><th>Settlement</th><th>Customer Requirement</th></tr></thead>
+      <tbody>
+        <tr><td class="hl">1. Wallet-to-Wallet</td><td>Internal ledger transfer. Customer's PayDuka wallet to merchant's wallet. Auto-refill keeps balance topped up.</td><td class="hl">R2&ndash;R3 flat</td><td class="hl">Instant (&lt;2s)</td><td>PayDuka app + linked bank</td></tr>
+        <tr><td class="hl">2. Direct Bank</td><td>PayShap Request or Capitec Pay pull. Account-to-account via Stitch API.</td><td class="hl">R5&ndash;R7 flat</td><td class="hl">Instant</td><td>Bank account (no app needed)</td></tr>
+        <tr><td>3. Card + Advance</td><td>Standard Visa/Mastercard authorisation. Optional same-day advance at 1&ndash;2% fee.</td><td>2.5&ndash;3.5% + 1&ndash;2% advance</td><td>Same-day (advance) or 1&ndash;3 days (standard)</td><td>Any card</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3>Fee Comparison: R100,000/month Merchant</h3>
+  <div class="tw">
+    <table class="t">
+      <thead><tr><th>Metric</th><th>Yoco (Card)</th><th>SnapScan (QR)</th><th>PayDuka Blended*</th><th>PayDuka 100% Wallet</th></tr></thead>
+      <tbody>
+        <tr><td>Monthly Fees</td><td>R2,750</td><td>R2,950</td><td class="hl">R2,200</td><td class="hl">R800&ndash;R1,200</td></tr>
+        <tr><td>Annual Drain</td><td>R33,000</td><td>R35,400</td><td class="hl">R26,400</td><td class="hl">R9,600&ndash;R14,400</td></tr>
+        <tr><td>Settlement</td><td>1&ndash;3 days</td><td>Next day</td><td class="hl">Instant / same-day</td><td class="hl">Instant (&lt;2s)</td></tr>
+        <tr><td>Same-Day Advance?</td><td>No</td><td>No</td><td class="hl">Yes</td><td>Not needed</td></tr>
+        <tr><td>Serves Unbanked?</td><td>No</td><td>No</td><td class="hl">Yes</td><td class="hl">Yes (via agents)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:0.78rem;color:var(--ink-faint);font-style:italic;">*Blended assumes early-stage mix: 40% wallet, 40% standard card, 20% card advance.</p>
+  <div class="co"><p>Merchants are naturally motivated to encourage wallet payments (R2&ndash;R3 vs R25&ndash;R35 card fees). Simple counter signage &mdash; "Pay with PayDuka, it's faster" &mdash; drives organic, zero-CAC consumer wallet acquisition.</p></div>
+</div>
+
+<!-- ==================== 07 AUTO-REFILL ==================== -->
+<div class="s" id="s7">
+  <span class="sn">07</span>
+  <h2>The Auto-Refill Wallet</h2>
+  <p>The greatest friction in any wallet-based payment system is insufficient balance at the moment of purchase. PayDuka solves this with an automatic refill mechanism inspired by PIX's seamless funding model.</p>
+  <h3>7.1 How It Works</h3>
+  <p>The customer links their bank account once and sets a threshold (e.g., "refill R1,000 when my balance drops below R500"). The wallet maintains itself invisibly. PayDuka executes the refill via PayShap (instant, R0&ndash;R7.50 bank fee) or a DebiCheck mandate (authenticated debit order, settled in hours). The customer never thinks about balance. They scan, confirm, and pay.</p>
+  <h3>7.2 Payment Flow</h3>
+  <ul>
+    <li>Customer opens PayDuka app, scans merchant QR code.</li>
+    <li>App displays amount. Customer confirms with fingerprint.</li>
+    <li>Backend checks wallet balance. If sufficient: instant ledger transfer (R2&ndash;R3 fee).</li>
+    <li>If insufficient: auto-refill triggers. Pulls from bank via PayShap. Wallet credited in seconds. Payment completes.</li>
+    <li>If balance + refill still insufficient: fallback to split-payment (partial wallet + direct bank pull).</li>
+  </ul>
+  <h3>7.3 Fee Economics</h3>
+  <p>Each refill costs R0&ndash;R7.50 (bank fee) but funds multiple purchases. A R1,000 refill covering 4&ndash;6 purchases amortises the bank fee to R1.25&ndash;R1.88 per transaction. PayDuka adds its flat R2&ndash;R3 merchant fee on top. Effective per-transaction cost: R1.50&ndash;R2.50. This is 60&ndash;90% cheaper than any card-based solution in South Africa.</p>
+  <h3>7.4 Unbanked Users</h3>
+  <p>Users without bank accounts load their wallets via cash agents at participating spaza shops, or receive peer-to-peer transfers from other PayDuka wallets. They cannot use auto-refill but share the same QR-scan payment experience.</p>
+</div>
+
+<!-- ==================== 08 CARD ADVANCE ==================== -->
+<div class="s" id="s8">
+  <span class="sn">08</span>
+  <h2>The Card Advance Engine</h2>
+  <p>PayDuka does not simply route card transactions. It finances the receivable gap created by card settlement timelines.</p>
+  <h3>8.1 The Problem</h3>
+  <p>When a customer pays R1,000 by card, the network authorises instantly. But the merchant receives settlement in 1&ndash;3 business days. For a restaurant owner who does R30,000 on Friday night, those funds are locked until Monday or Tuesday. Saturday morning stock purchases require cash on hand &mdash; which they may not have.</p>
+  <h3>8.2 The Solution</h3>
+  <p>When a card transaction is authorised, PayDuka instantly credits the net settlement amount (minus a 1&ndash;2% advance fee) into the merchant's PayDuka wallet. PayDuka then collects from the card network when settlement arrives. The receivable is confirmed &mdash; the scheme has already authorised the payment. We are lending against near-certain capital with a 1&ndash;3 day duration.</p>
+  <h3>8.3 Example</h3>
+  <p>Card transaction: R1,000. Net after interchange: ~R970. Advance fee at 1.5%: R14.55. Merchant receives R955.45 instantly. PayDuka collects R970 from the network 1&ndash;3 days later and retains R14.55 margin.</p>
+  <h3>8.4 Risk Management</h3>
+  <ul>
+    <li>Rolling reserve: 5% (new merchants) / 2% (established) held against chargebacks.</li>
+    <li>30-day qualification period before advance eligibility.</li>
+    <li>Fraud scoring on every transaction. Velocity limits, device fingerprinting, geo-fencing.</li>
+    <li>Chargeback cap: merchants exceeding 1% chargeback ratio lose advance access.</li>
+    <li>Liquidity buffer: PayDuka maintains a reserve covering 5+ days of outstanding advances.</li>
+  </ul>
+  <h3>8.5 Revenue Projection</h3>
+  <p>With 2,000 merchants and 30% of card volume (R18M/month) using advances at 1.5%: approximately R256,500/month (R3.08M/year) at 80%+ gross margin after capital cost. By Year 3, advance fee revenue is projected to reach R15M annually.</p>
+</div>
+
+<!-- ==================== 09 TECHNOLOGY ==================== -->
+<div class="s" id="s9">
+  <span class="sn">09</span>
+  <h2>Technology Architecture</h2>
+  <h3>9.1 Five-Layer Stack</h3>
+  <div class="tw">
+    <table class="t">
+      <thead><tr><th>Layer</th><th>Name</th><th>Components</th></tr></thead>
+      <tbody>
+        <tr><td class="hl">1</td><td>Application Frontends</td><td>React Native consumer & merchant PoS apps (Android/iOS). QR scanning, biometric auth, auto-refill management, card reader Bluetooth connectivity.</td></tr>
+        <tr><td class="hl">2</td><td>Modular Backend API</td><td>NestJS on AWS Cape Town (af-south-1). PostgreSQL + Redis. BullMQ async queues. Auth, Wallet, Refill, Advance, Fraud, Settlement, Webhook services. Event-sourced append-only transaction ledger.</td></tr>
+        <tr><td class="hl">3</td><td>Bank-to-Bank Rails</td><td>Stitch API integration: PayShap Request, Capitec Pay, DebiCheck mandates, card acquiring. M-Pesa API for East Africa expansion.</td></tr>
+        <tr><td class="hl">4</td><td>Advance Engine</td><td>Real-time merchant credit scoring, card authorisation validation, instant wallet crediting, continuous reconciliation with acquirer settlements.</td></tr>
+        <tr><td class="hl">5</td><td>Decoupled Web3 Registry</td><td>Polygon Mainnet. SettlementRegistry contract (immutable proof of clearance). PDukaToken ERC-20 (loyalty, staking, governance). RewardDistributor. Completely decoupled &mdash; core operations run uninterrupted if Polygon stalls.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3>9.2 Smart Contract Architecture</h3>
+  <div class="tw">
+    <table class="t">
+      <thead><tr><th>Contract</th><th>Function</th><th>Key Features</th></tr></thead>
+      <tbody>
+        <tr><td>PDukaToken (ERC-20)</td><td>Core token</td><td>21B fixed supply, burn mechanism, transfer controls</td></tr>
+        <tr><td>SettlementRegistry</td><td>On-chain proof</td><td>Records every settlement hash. Immutable audit trail.</td></tr>
+        <tr><td>StakingPool</td><td>Yield distribution</td><td>Tiered lock-up, compounding rewards, early exit penalty</td></tr>
+        <tr><td>RewardDistributor</td><td>Loyalty payouts</td><td>Fee-discount distribution, referral bonuses</td></tr>
+        <tr><td>Governance Module</td><td>On-chain voting</td><td>Proposals, quorum thresholds, time-locked execution</td></tr>
+        <tr><td>Gaming Reward Pool</td><td>P2E payouts</td><td>Anti-cheat validation, daily caps</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3>9.3 Wallet & PoS System</h3>
+  <p>The PayDuka Mobile Wallet features biometric authentication, QR payments, auto-refill management, integrated staking, in-app gaming, and multi-language support (Zulu, Swahili, Hausa, French). The Merchant PoS Terminal is available as an Android software application and a dedicated hardware terminal with NFC, receipt printer, solar charging, and offline mode caching up to 500 transactions.</p>
+  <h3>9.4 Security Architecture</h3>
+  <div class="tw">
+    <table class="t">
+      <thead><tr><th>Layer</th><th>Component</th><th>Mechanism</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Mobile Wallet</td><td>AES-256 encryption via AWS KMS, biometric auth, PIN, 12-word seed phrase recovery</td></tr>
+        <tr><td>2</td><td>Smart Contracts</td><td>Third-party audit (CertiK/Hacken), multi-sig 3-of-5, emergency pause, time-lock</td></tr>
+        <tr><td>3</td><td>PoS Terminal</td><td>End-to-end encryption, duress PIN, remote lock, tamper detection, auto-wipe</td></tr>
+        <tr><td>4</td><td>Backend</td><td>Zero-trust architecture, TLS 1.3, DDoS protection, JWT + MFA, rate limiting</td></tr>
+        <tr><td>5</td><td>Fraud Engine</td><td>Rule-based scoring (15 rules), velocity limits, device fingerprinting, geo-alerts, AI-ready pipeline</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3>9.5 Infrastructure & Cost</h3>
+  <p>Production hosted on AWS af-south-1 (Cape Town): ECS Fargate API (2 tasks) + worker, RDS Multi-AZ PostgreSQL, ElastiCache Redis, S3 (KYC documents, exports), ALB with WAF, CloudWatch, Sentry, Secrets Manager, KMS. Estimated monthly infrastructure cost: ~$870. CI/CD via GitHub Actions. Terraform for infrastructure-as-code.</p>
+</div>
+
+<!-- ==================== 10 TOKEN ==================== -->
+<div class="s" id="s10">
+  <span class="sn">10</span>
+  <h2>PDuka Token & Tokenomics</h2>
+  <h3>10.1 Design Philosophy</h3>
+  <p>The PDuka token is deliberately decoupled from core payment operations. It provides loyalty rewards, fee discounts, staking yield, governance, and an immutable audit trail &mdash; but core payments route through banking rails regardless of blockchain conditions. This is the key architectural departure from v2.0: the token is a reward and transparency layer, not the payment currency.</p>
+  <h3>10.2 Token Utility</h3>
+  <ul>
+    <li>Fee Discounts: Merchants holding staked PDuka receive 10&ndash;20% reduction on PayDuka platform fees.</li>
+    <li>Staking Rewards: 8&ndash;15% APY with 30&ndash;365 day lock-up periods.</li>
+    <li>Governance: 1 staked PDuka = 1 vote on protocol proposals and fee structures.</li>
+    <li>Gaming: Sole currency for P2E entry fees, in-game purchases, and prize pools.</li>
+    <li>Blockchain Payroll: Franchise staff receive salaries via Polygon wallets.</li>
+    <li>Audit Trail: Every settlement is recorded in the SettlementRegistry contract on Polygon.</li>
+  </ul>
+  <h3>10.3 Allocation</h3>
+  <div class="tw">
+    <table class="t">
+      <thead><tr><th>Category</th><th>%</th><th>Tokens</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Ecosystem Growth & Rewards</td><td>38.05%</td><td>7,990,000,000</td><td>User incentives, merchant onboarding, gaming rewards</td></tr>
+        <tr><td>Staking Rewards Reserve</td><td>20%</td><td>4,200,000,000</td><td>5-year yield distribution schedule</td></tr>
+        <tr><td>Protocol Development</td><td>15%</td><td>3,150,000,000</td><td>24-month vesting</td></tr>
+        <tr><td>Liquidity Provision</td><td>15%</td><td>3,150,000,000</td><td>CEX/DEX market making</td></tr>
+        <tr><td>Team & Advisors</td><td>10%</td><td>2,100,000,000</td><td>6-month cliff, 24-month linear vest</td></tr>
+        <tr><td>ICO / Presale</td><td>0.95%</td><td>200,000,000</td><td>Seed + Round 1 + Round 2</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3>10.4 Deflationary Mechanics</h3>
+  <ul>
+    <li>Fee Burn: 10% of protocol transaction fees converted to PDuka and permanently burned monthly.</li>
+    <li>Staking Lock-Up: Target 30% stake ratio locks ~6.3B tokens from circulation.</li>
+    <li>Vesting Controls: Team allocations vest over 24 months after 6-month cliff.</li>
+  </ul>
+</div>
+
+<!-- ==================== 11 MONETARY POLICY ==================== -->
+<div class="s" id="s11">
+  <span class="sn">11</span>
+  <h2>Monetary Policy</h2>
+  <p>PDuka operates on an absolute fixed supply of 21,000,000,000 tokens. This ceiling is permanent and immutable &mdash; encoded directly into the smart contract at genesis. No new PDuka will ever be created.</p>
+  <h3>11.1 The 3-Way Split</h3>
+  <p>When the blockchain settlement layer records a transaction, PDuka allocated from treasury is split three ways:</p>
+  <div class="stats">
+    <div class="stat"><div class="stat-v">2%</div><div class="stat-l">Treasury Return</div></div>
+    <div class="stat"><div class="stat-v">0.5%</div><div class="stat-l">Permanent Burn</div></div>
+    <div class="stat"><div class="stat-v">97.5%</div><div class="stat-l">Merchant ZARP</div></div>
+    <div class="stat"><div class="stat-v">+1.5%</div><div class="stat-l">Net Treasury Growth</div></div>
+  </div>
+  <p>The treasury skim rate (2%) exceeds the burn rate (0.5%) per transaction. The treasury nets +1.5% on every payment processed &mdash; growing stronger with volume. The system is engineered for perpetual, self-sustaining operation across decades. Merchant settlement converts to ZARP (ZAR-pegged stablecoin) so merchants receive stable value with zero crypto volatility.</p>
+  <div class="co"><p>Scarcity compounds with every transaction. Every merchant onboarded, every game played, and every salary paid in PDuka reduces available supply and strengthens the foundation for long-term value.</p></div>
+</div>
+
+<!-- ==================== 12 ICO ==================== -->
+<div class="s" id="s12">
+  <span class="sn">12</span>
+  <h2>ICO & Token Sale Structure</h2>
+  <div class="tw">
+    <table class="t">
+      <thead><tr><th>Round</th><th>Tokens</th><th>Price</th><th>Raise Target</th><th>Investors</th></tr></thead>
+      <tbody>
+        <tr><td>Seed / Angel</td><td>50,000,000</td><td>$0.005</td><td>$250,000</td><td>Angel investors, strategic partners</td></tr>
+        <tr><td>Presale Round 1</td><td>100,000,000</td><td>$0.008</td><td>$800,000</td><td>Early community, DeFi participants</td></tr>
+        <tr><td>Presale Round 2</td><td>50,000,000</td><td>$0.010</td><td>$500,000</td><td>General public, retail investors</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Total ICO: 200,000,000 PDuka (&lt;1% of supply). Total raise target: $1,550,000. All rounds KYC-verified and whitelisted.</p>
+  <h3>12.2 Use of Proceeds</h3>
+  <div class="tw">
+    <table class="t">
+      <thead><tr><th>Use</th><th>%</th><th>Amount</th></tr></thead>
+      <tbody>
+        <tr><td>Smart Contract Audit (CertiK/Hacken)</td><td>16%</td><td>$248,000</td></tr>
+        <tr><td>PoS Hardware Development</td><td>22%</td><td>$341,000</td></tr>
+        <tr><td>Franchise Pilot Locations (2&ndash;3 sites)</td><td>26%</td><td>$403,000</td></tr>
+        <tr><td>CEX Listing Fees & Market Making</td><td>16%</td><td>$248,000</td></tr>
+        <tr><td>Development & Infrastructure</td><td>12%</td><td>$186,000</td></tr>
+        <tr><td>Marketing & Ambassador Programme</td><td>8%</td><td>$124,000</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ==================== 13 BUSINESS MODEL ==================== -->
+<div class="s" id="s13">
+  <span class="sn">13</span>
+  <h2>Business Model & Revenue</h2>
+  <div class="tw">
+    <table class="t">
+      <thead><tr><th>Revenue Stream</th><th>Mechanism</th><th>Year 1</th><th>Year 2</th><th>Year 3</th></tr></thead>
+      <tbody>
+        <tr><td>Wallet transactions</td><td>R2&ndash;R3 flat fee per wallet-to-wallet payment</td><td>R2.4M</td><td>R9.6M</td><td>R24.0M</td></tr>
+        <tr><td>Card processing margins</td><td>Margin on card interchange spread</td><td>R1.8M</td><td>R7.2M</td><td>R18.0M</td></tr>
+        <tr><td>Same-day advance fees</td><td>1&ndash;2% of advanced card settlement amount</td><td>R1.5M</td><td>R6.0M</td><td>R15.0M</td></tr>
+        <tr><td>Cross-border settlements</td><td>0.5&ndash;1% of USDC on Polygon transfers</td><td>&mdash;</td><td>R1.2M</td><td>R4.8M</td></tr>
+        <tr><td>Merchant SaaS</td><td>R150&ndash;R300/month analytics & reporting tools</td><td>R0.3M</td><td>R1.2M</td><td>R3.0M</td></tr>
+        <tr><td>Wallet float interest</td><td>Interest on pooled wallet balances</td><td>R0.6M</td><td>R2.4M</td><td>R6.0M</td></tr>
+        <tr><td>Token ecosystem fees</td><td>Staking protocol fee, gaming rake</td><td>&mdash;</td><td>R0.6M</td><td>R1.8M</td></tr>
+        <tr><td style="font-weight:700;color:var(--gold);">Total Revenue</td><td></td><td style="font-weight:700;color:var(--gold);">R6.6M</td><td style="font-weight:700;color:var(--gold);">R28.2M</td><td style="font-weight:700;color:var(--gold);">R72.6M</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="stat-v">2k → 20k</div><div class="stat-l">Active Merchants</div></div>
+    <div class="stat"><div class="stat-v">30k → 500k</div><div class="stat-l">Customer Wallets</div></div>
+    <div class="stat"><div class="stat-v">500k → 5M</div><div class="stat-l">Monthly Txns</div></div>
+    <div class="stat"><div class="stat-v">R50M → R500M</div><div class="stat-l">Monthly TPV</div></div>
+  </div>
+</div>
+
+<!-- ==================== 14 FRANCHISE ==================== -->
+<div class="s" id="s14">
+  <span class="sn">14</span>
+  <h2>Franchise Strategy</h2>
+  <p>PayDuka becomes the retailer first. By establishing franchise pilot locations &mdash; initially in restaurant and convenience retail &mdash; PayDuka generates real transaction volume, verifiable cost-saving data, and irrefutable operational proof before approaching corporate retail groups.</p>
+  <div class="tw">
+    <table class="t">
+      <thead><tr><th>Phase</th><th>Action</th><th>Outcome</th></tr></thead>
+      <tbody>
+        <tr><td>1 &mdash; Pilot</td><td>Establish restaurant & convenience franchise locations. All payments via PayDuka PoS. Staff on blockchain payroll.</td><td>Live transaction data, cost savings proof, security validation.</td></tr>
+        <tr><td>2 &mdash; Retail</td><td>Partner with SPAR/KwikSpar, Food Lovers Market, Pick n Pay franchises using Phase 1 data package.</td><td>Scaled volume, brand visibility, corporate credibility.</td></tr>
+        <tr><td>3 &mdash; Corporate</td><td>Pitch corporate headquarters with verified operational data.</td><td>Network-wide adoption agreements.</td></tr>
+        <tr><td>4 &mdash; Continent</td><td>Roll out across partner networks. 1,000+ PoS locations.</td><td>Mass adoption across South Africa, East Africa, West Africa.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="co"><p>The pitch is not a deck. It is a business. This strategy creates a competitive moat that cannot be replicated through software alone &mdash; it requires operational execution, retail relationships, and time.</p></div>
+  <h3>14.2 PayDuka Mall</h3>
+  <p>The long-term vision: a purpose-built retail environment where every tenant, staff member, and customer operates within the PayDuka ecosystem. Staking terminals throughout the mall. P2E kiosks for engagement. Staff salaries via blockchain payroll. A fully operational proof of concept that corporate executives can visit and observe directly.</p>
+</div>
+
+<!-- ==================== 15 P2E ==================== -->
+<div class="s" id="s15">
+  <span class="sn">15</span>
+  <h2>Play-to-Earn Gaming</h2>
+  <p>The P2E platform is a user acquisition and token distribution engine anchored to a real retail payment infrastructure &mdash; meaning token utility exists independently of game participation.</p>
+  <ul>
+    <li>Market Tycoon: Real-time trading simulation. Weekly leaderboards. PDuka rewards.</li>
+    <li>PayDuka Quiz: Financial literacy game. Correct answers earn PDuka.</li>
+    <li>Referral Challenges: Reward onboarding of new merchants and community members.</li>
+  </ul>
+  <p>Anti-abuse: daily reward caps, on-chain anti-cheat validation, referral verification on confirmed actions only. In markets where daily wages are $3&ndash;$8, PDuka earnings represent meaningful supplementary income.</p>
+</div>
+
+<!-- ==================== 16 MARKET ==================== -->
+<div class="s" id="s16">
+  <span class="sn">16</span>
+  <h2>Market Opportunity</h2>
+  <div class="tw">
+    <table class="t">
+      <thead><tr><th>Market</th><th>Size</th><th>PayDuka Angle</th></tr></thead>
+      <tbody>
+        <tr><td>African Retail Payments</td><td>$800B+ TAM</td><td>44M+ SMEs. Cash-to-digital transition accelerating.</td></tr>
+        <tr><td>SA Instant Payments</td><td>R742B processed via PayShap</td><td>PayDuka as application layer on live rails.</td></tr>
+        <tr><td>Merchant Cash Advance</td><td>R50B+ annual card settlement volume in SA</td><td>Same-day advance engine &mdash; no competitor offers this.</td></tr>
+        <tr><td>Cross-Border Remittance</td><td>6.3% avg fee (World Bank)</td><td>USDC on Polygon: 0.5&ndash;1% fee, sub-60-second settlement.</td></tr>
+        <tr><td>Play-to-Earn Gaming</td><td>$10B+ → $65B+ by 2027</td><td>Mobile-first P2E for Africa's 200M+ smartphone users.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3>Why Now</h3>
+  <ul>
+    <li>PayShap mature with R742B processed and 11 banks integrated. PayShap Request live since Dec 2024.</li>
+    <li>Capitec Pay capped at R7. Direct API access via Stitch.</li>
+    <li>PIX has proven the model at 170M users and $6.7T annual volume.</li>
+    <li>SA national payment system opening to non-bank entities from 2026.</li>
+    <li>50%+ smartphone penetration across Sub-Saharan Africa projected by 2026.</li>
+  </ul>
+</div>
+
+<!-- ==================== 17 COMPETITIVE ==================== -->
+<div class="s" id="s17">
+  <span class="sn">17</span>
+  <h2>Competitive Landscape</h2>
+  <div class="tw">
+    <table class="t">
+      <thead><tr><th>Solution</th><th>Bypasses Cards</th><th>Instant Settle</th><th>Same-Day Advance</th><th>Wallet</th><th>Unbanked</th><th>Cross-Border</th><th>Token/Loyalty</th></tr></thead>
+      <tbody>
+        <tr><td class="hl">PayDuka</td><td class="hl">Yes</td><td class="hl">Yes</td><td class="hl">Yes</td><td class="hl">Yes</td><td class="hl">Yes</td><td class="hl">Yes</td><td class="hl">Yes</td></tr>
+        <tr><td>SnapScan</td><td>No (card-based)</td><td>No (next day)</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
+        <tr><td>Yoco</td><td>No (card-based)</td><td>No (1&ndash;3 days)</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
+        <tr><td>iKhokha</td><td>No (card-based)</td><td>No (1&ndash;3 days)</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
+        <tr><td>M-Pesa</td><td>Yes</td><td>Yes</td><td>No</td><td>Yes</td><td>Yes</td><td>Partial</td><td>No</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Every South African card-terminal and QR-payment product routes through Visa/Mastercard rails. PayDuka is the only platform that bypasses card networks entirely while still offering card acceptance with same-day advances for merchants who need it.</p>
+</div>
+
+<!-- ==================== 18 ROADMAP ==================== -->
+<div class="s" id="s18">
+  <span class="sn">18</span>
+  <h2>Roadmap & Budget</h2>
+  <div class="tw">
+    <table class="t">
+      <thead><tr><th>Phase</th><th>Timeline</th><th>Deliverables</th><th>Budget</th></tr></thead>
+      <tbody>
+        <tr><td class="hl">0 &mdash; Foundation</td><td>Month 1</td><td>Legal structures, licensing, Stitch API agreement, card acquiring partnerships, core team.</td><td>R280,000</td></tr>
+        <tr><td class="hl">1 &mdash; MVP</td><td>Months 2&ndash;5</td><td>Android merchant & customer apps, wallet core with auto-refill, card payments with same-day advance, pilot: 50 merchants.</td><td>R2.2&ndash;2.75M</td></tr>
+        <tr><td class="hl">2 &mdash; Commercial</td><td>Months 6&ndash;9</td><td>iOS release, cash-agent on-ramps, auto-settlement, 500+ merchants, 10,000+ wallets.</td><td>R3.4&ndash;4.0M</td></tr>
+        <tr><td>3 &mdash; Web3 & Kenya</td><td>Months 10&ndash;13</td><td>Audited Polygon smart contracts, loyalty token, franchise pilot store, Kenya launch (50 merchants).</td><td>R4.5&ndash;5.7M</td></tr>
+        <tr><td>4 &mdash; Cross-Border</td><td>Months 14&ndash;18</td><td>USDC cross-border settlement (SA ↔ Kenya), token exchange listings, staking.</td><td>R7.1&ndash;9.5M</td></tr>
+        <tr><td>5 &mdash; Scale Africa</td><td>Months 19&ndash;26</td><td>Nigeria & Ghana rollout, hardware PoS (NFC, solar, offline), developer SDK.</td><td>R11.9&ndash;16.65M</td></tr>
+        <tr><td style="font-weight:700;color:var(--gold);">Total</td><td>26 months</td><td></td><td style="font-weight:700;color:var(--gold);">R29&ndash;39M (~$1.6&ndash;2.1M)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3>Funding Milestones</h3>
+  <ul>
+    <li>To revenue-generating MVP (end Phase 1): ~R2.5M (~$139k).</li>
+    <li>To full commercial launch (end Phase 2): ~R6.4M (~$356k). Unit economics turn positive during Phase 2.</li>
+    <li>Platform projected to become fully self-funding from Phase 3 onward.</li>
+  </ul>
+  <h3>Team Requirements</h3>
+  <p>Core team of 6 for Phase 1 (CTO, 2 backend, 1 mobile, 1 full-stack, 1 QA). Scaling to 12&ndash;15 engineers by Phase 5 with additions for iOS, cash-agent integration, blockchain, Kenya ops, and compliance.</p>
+</div>
+
+<!-- ==================== 19 SOCIAL IMPACT ==================== -->
+<div class="s" id="s19">
+  <span class="sn">19</span>
+  <h2>Social Impact</h2>
+  <ul>
+    <li>Fee Savings: A merchant processing R100k/month saves R18,000&ndash;R27,000 annually vs card terminals &mdash; equivalent to 1&ndash;2 months' rent for a small business.</li>
+    <li>Crime Reduction: Digital payments eliminate cash-on-premises incentive for robbery. Comparable M-Pesa deployments showed 30&ndash;40% robbery reduction. Counterfeit detection at PoS protects cash-handling merchants.</li>
+    <li>Financial Inclusion: PayDuka wallet requires only a smartphone. 400M+ unbanked adults gain access to digital transacting, on-chain financial history, and future credit eligibility.</li>
+    <li>P2E Income: In markets with $3&ndash;$8 daily wages, PDuka earnings provide meaningful supplementary income with embedded financial literacy.</li>
+    <li>Blockchain Payroll: Franchise staff participate in the digital economy through salary-as-tokens, aligning employee incentives with ecosystem growth.</li>
+  </ul>
+</div>
+
+<!-- ==================== 20 LEGAL ==================== -->
+<div class="s" id="s20">
+  <span class="sn">20</span>
+  <h2>Legal & Regulatory Compliance</h2>
+  <ul>
+    <li>Token Classification: PDuka structured as utility token under U.S. Howey Test, EU MiCA, and applicable African regulations. Formal legal opinions in each jurisdiction prior to launch.</li>
+    <li>Wallet Licensing: Partner with licensed "wallet-as-a-service" provider to meet PSP/financial services licensing requirements. Cross-border stablecoin transfers require FX regulatory clearance.</li>
+    <li>KYC & AML: Mandatory for all merchant and high-value accounts. AML monitoring at smart contract and application layers.</li>
+    <li>Data Privacy: POPIA (South Africa), GDPR (EU), NDPR (Nigeria). No PII stored on-chain.</li>
+    <li>Franchise Compliance: Full labour law compliance including minimum wage, employment contracts, tax reporting for non-cash remuneration.</li>
+    <li>SA Payment System: Monitoring SARB's 2026 opening of national payment system to non-bank entities for direct participation.</li>
+  </ul>
+</div>
+
+<!-- ==================== 21 RISK ==================== -->
+<div class="s" id="s21">
+  <span class="sn">21</span>
+  <h2>Risk Factors</h2>
+  <ul>
+    <li>Regulatory: Evolving crypto and fintech regulations may require structural adjustments or additional licensing.</li>
+    <li>Adoption: Achieving projected merchant/user adoption depends on market readiness, competitive dynamics, and execution.</li>
+    <li>Technology: Smart contract vulnerabilities, banking API changes, or infrastructure failures could impact service.</li>
+    <li>Token Volatility: PDuka value may fluctuate based on market conditions unrelated to ecosystem fundamentals.</li>
+    <li>Capital: Advance engine requires liquidity buffer. Insufficient capital could limit advance availability.</li>
+    <li>Competition: Banks may build competing QR-payment apps directly on PayShap rails.</li>
+    <li>Team: Current team of four is small relative to scope. Execution depends on recruitment and retention.</li>
+    <li>Franchise: Establishing and operating retail locations involves capital intensity and market-specific risks.</li>
+  </ul>
+</div>
+
+<!-- ==================== 22 TEAM ==================== -->
+<div class="s" id="s22">
+  <span class="sn">22</span>
+  <h2>Team</h2>
+  <ul>
+    <li>Mr X.G. Sikhosana &mdash; Founder & CEO. Visionary entrepreneur and blockchain strategist.</li>
+    <li>Mr G. Jako &mdash; Chief Technology Officer. Blockchain architect and full-stack engineer.</li>
+    <li>Mrs J. Ndlangamandla &mdash; Head of Operations & Merchant Partnerships.</li>
+    <li>Mr N. Ndlangamandla &mdash; Head of Community & Marketing.</li>
+  </ul>
+</div>
+
+<!-- ==================== 23 CONCLUSION ==================== -->
+<div class="s" id="s23">
+  <span class="sn">23</span>
+  <h2>Conclusion</h2>
+  <p>PayDuka is not a crypto payment protocol. It is a fintech platform that uses South Africa's live banking rails &mdash; PayShap, Capitec Pay, DebiCheck &mdash; to deliver instant payments at 60&ndash;90% lower cost than any card-based solution. For merchants who still accept cards, the same-day advance engine resolves the settlement delay that no competitor addresses. The PDuka token adds loyalty, governance, staking, and an immutable audit layer &mdash; decoupled from core operations so the platform runs regardless of blockchain conditions.</p>
+  <p>The model is proven. PIX transformed Brazil with 170 million users and $6.7 trillion in annual volume. South Africa's PayShap has processed R742 billion. Capitec Pay caps fees at R7. The rails are live. The team that builds the best application layer wins.</p>
+  <div class="co"><p>The future of African payments is account-to-account. PayDuka is building it now.</p></div>
+</div>
+
+<!-- FOOTER -->
+<div class="wf">
+  <p>&copy; 2026 PayDuka (Pty) Ltd &middot; Reg No: 2026/356880/07 &middot; SARS Tax Ref: 9372686239 &middot; Ermelo, Mpumalanga, South Africa</p>
+  <p style="margin-top:.5rem;">All rights reserved. This document is for informational purposes only and does not constitute an offer to sell or solicitation to purchase any securities or financial instruments. Version 3.0 &middot; June 2026 &middot; payduka.xyz</p>
+</div>
+
+</div>
+</body>
+</html>
